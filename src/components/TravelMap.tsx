@@ -25,9 +25,9 @@ const locations = [
     description: 'My home base - where every adventure begins and ends',
     image: '/images/madrid.jpg',
     visitDate: 'Home Base',
-    memories: 'Favorite cafés, morning runs in Retiro Park, tapas nights with friends',
+    memories: 'Sunrise runs in Retiro Park, discovering hidden tapas bars in La Latina, Sunday afternoons at the Prado, flamenco nights in Lavapiés',
     blogPosts: [],
-    highlights: ['Retiro Park', 'Malasaña District', 'Mercado San Miguel'],
+    highlights: ['Retiro Park', 'La Latina', 'Malasaña', 'Mercado San Miguel', 'El Rastro', 'Prado Museum'],
   },
   {
     id: 'barcelona',

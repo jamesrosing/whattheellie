@@ -22,7 +22,6 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { name: "Blog", href: "/" },
-  { name: "About", href: "/about" },
   { name: "Travel Map", href: "/map" },
   { name: "Spain Guide", href: "/spain" },
 ];
