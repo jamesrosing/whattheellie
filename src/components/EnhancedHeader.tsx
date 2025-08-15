@@ -72,13 +72,11 @@ export const EnhancedNavigation: FunctionComponent = () => {
             side="right" 
             className="w-[85%] sm:w-[400px] animate-slide-in-right"
           >
-            <SheetHeader className="mb-8">
-              <SheetTitle className="text-3xl font-bold text-center">
-                Menu
-              </SheetTitle>
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Menu</SheetTitle>
             </SheetHeader>
             
-            <nav className="flex flex-col space-y-2">
+            <nav className="flex flex-col space-y-2 mt-8">
               {menuItems.map((item, index) => {
                 const isActive = pathname === item.href;
                 

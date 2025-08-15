@@ -1,61 +1,42 @@
 import { Footer } from "@/components/Footer";
-import { EnhancedHeader } from "@/components/EnhancedHeader";
+import { Header } from "@/components/Header";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import Markdown from "react-markdown";
 
-const content = `# Meet Ellie
+const content = `![Ellie in her element](/images/ellie-profile.jpg)
 
-![Ellie Profile](/images/ellie-profile.jpg)
+Hi! I'm Ellie – adventurer, dreamer, and your guide to finding magic in the everyday and extraordinary alike.
 
-## The Journey Begins Where Comfort Ends
+After spending years in the corporate world, climbing ladders that led to offices with better views but less fulfillment, I made a decision that changed everything. I traded my business suits for backpacks, my conference rooms for cobblestone streets, and my spreadsheets for sunset views from mountaintops I never thought I'd climb.
 
-Hi, I'm Ellie – a wanderer, storyteller, and eternal optimist chasing sunsets across the globe.
+![Ellie exploring new horizons](/images/image2.jpg)
 
-Three years ago, I was sitting in a glass tower in London, managing investment portfolios and living what everyone called "the dream." But staring at those endless spreadsheets, I kept thinking about that quote: *"Twenty years from now, you will be more disappointed by the things you didn't do than by the ones you did."*
+## My Story
 
-So I did something crazy. I sold my flat, packed my life into two backpacks, and bought a one-way ticket to New Zealand.
+What started as a two-week vacation to "find myself" turned into a complete life transformation. That first solo trip taught me more about courage, resilience, and joy than any boardroom ever could. I discovered that the world is full of kind strangers who become friends, hidden cafes that serve the perfect cup of coffee, and moments that take your breath away when you least expect them.
 
-## Why I Travel
-
-![Exploring new horizons](/images/malaga.jpg)
-
-Travel isn't just about pretty Instagram photos (though I do love a good sunset). For me, it's about:
-
-- **Connection** – Meeting locals who become lifelong friends, sharing meals with strangers who become family
-- **Growth** – Pushing past comfort zones, whether it's hiking an active volcano or trying fermented shark in Iceland
-- **Perspective** – Understanding that there are a thousand ways to live a meaningful life
-- **Stories** – Collecting moments that become the tales I'll tell for decades
+Now, I'm on a mission to explore not just new places, but new ways of living. From learning to cook authentic pad thai from a grandmother in Bangkok to hiking through Scotland's highlands in the rain (and loving every minute), each experience adds another layer to this incredible journey.
 
 ## What You'll Find Here
 
-This blog is my digital diary, but it's also your guidebook. I share:
+This blog is my love letter to adventure – both the grand gestures and the quiet moments. I share:
 
-✈️ **Honest travel guides** – The good, the challenging, and the unexpectedly magical
+- **Honest travel stories** – the good, the challenging, and the unexpectedly hilarious
+- **Practical tips** for fellow adventurers (especially those taking their first solo steps)
+- **Hidden gems** that you won't find in typical guidebooks
+- **Life lessons** learned on the road (and sometimes the hard way)
+- **Beautiful moments** that remind us why we explore
 
-🎒 **Solo travel tips** – Especially for women navigating the world independently
+## Join the Adventure
 
-🌍 **Hidden gems** – Those off-the-beaten-path places that steal your heart
+Whether you're planning your own escape, living vicariously through my adventures, or just need a reminder that there's magic beyond the everyday routine – you're in the right place.
 
-💭 **Real talk** – The mental health ups and downs of long-term travel
+Let's explore this beautiful world together, one story at a time.
 
-🍜 **Food adventures** – Because the best way to understand a culture is through its cuisine
+With love and wanderlust,
 
-## Current Location: Following Summer
-
-Right now, I'm somewhere between yesterday's adventure and tomorrow's discovery. I chase summer around the globe – from the beaches of Bali to the fjords of Norway, always seeking those golden hour moments when the world feels infinite.
-
-## Let's Connect
-
-Whether you're planning your first solo trip, living vicariously through my misadventures, or just need a sign to book that flight – welcome to my corner of the internet.
-
-Remember: Life begins at the end of your comfort zone, and the world is waiting.
-
-*Adventure is out there – you just have to be brave enough to find it.*
-
-**Love & wanderlust,**
-
-**Ellie** ✨`;
+**Ellie** ✈️`;
 
 export async function generateMetadata() {
   return {
@@ -78,8 +59,8 @@ export async function generateMetadata() {
 const Page = async () => {
   return (
     <div className="container mx-auto px-5">
-      <EnhancedHeader />
-      <div className="prose lg:prose-lg dark:prose-invert m-auto mt-20 mb-10 blog-content animate-fade-in-up">
+      <Header />
+      <div className="prose lg:prose-lg dark:prose-invert m-auto mt-20 mb-10 blog-content">
         <Markdown>{content}</Markdown>
       </div>
       <Footer />
