@@ -39,6 +39,7 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "url-join": "^5.0.0",
+    "vercel": "^45.0.9",
     "zod": "^3.24.1"
   },
   "devDependencies": {
