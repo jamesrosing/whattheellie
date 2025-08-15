@@ -1,41 +1,72 @@
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { EnhancedHeader } from "@/components/EnhancedHeader";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import Markdown from "react-markdown";
 
-const content = `# About Me
+const content = `# Meet Ellie
 
-![Samantha](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/db7abbe3-aa5c-433e-a16d-cbf137d1c9e5.png/public)
+![Ellie Profile](/images/ellie-profile.jpg)
 
-Hey there! I'm Samantha, a 28-year-old former corporate warrior who decided to ditch the 9-to-5 grind and embark on an adventure of a lifetime. After years of hustling in a high-pressure job, I realized that life is too short to be stuck in an office, staring at spreadsheets all day.
+## The Journey Begins Where Comfort Ends
 
-So I took a leap of faith, quit my cushy job in Singapore, and decided to see the world on my own terms. No more stuffy meetings or rigid schedules – just me, my backpack, and an open road ahead.
+Hi, I'm Ellie – a wanderer, storyteller, and eternal optimist chasing sunsets across the globe.
 
-![Samantha](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/6b080e65-2329-4a36-ad5c-0a6af8d9aeb1.png/public)
+Three years ago, I was sitting in a glass tower in London, managing investment portfolios and living what everyone called "the dream." But staring at those endless spreadsheets, I kept thinking about that quote: *"Twenty years from now, you will be more disappointed by the things you didn't do than by the ones you did."*
 
-This blog is where I'll be documenting my travels, sharing my experiences, and hopefully inspiring others to follow their wanderlust. From trekking through remote villages to savoring local cuisines, I'm on a mission to immerse myself in different cultures and create memories that will last a lifetime.
+So I did something crazy. I sold my flat, packed my life into two backpacks, and bought a one-way ticket to New Zealand.
 
-But this journey isn't just about checking off destinations from a bucket list. It's about self-discovery, personal growth, and finding the courage to live life on my own terms. I'll be honest and raw, sharing the highs and lows, the moments of pure bliss and the inevitable challenges that come with solo travel.
+## Why I Travel
 
-So join me on this adventure, and let's explore the world together! Who knows, maybe my stories will inspire you to take that leap of faith and pursue your own dreams, whatever they may be.
+![Exploring new horizons](/images/malaga.jpg)
 
-Let's go on an adventure!
+Travel isn't just about pretty Instagram photos (though I do love a good sunset). For me, it's about:
 
-Love,
+- **Connection** – Meeting locals who become lifelong friends, sharing meals with strangers who become family
+- **Growth** – Pushing past comfort zones, whether it's hiking an active volcano or trying fermented shark in Iceland
+- **Perspective** – Understanding that there are a thousand ways to live a meaningful life
+- **Stories** – Collecting moments that become the tales I'll tell for decades
 
-Samantha`;
+## What You'll Find Here
+
+This blog is my digital diary, but it's also your guidebook. I share:
+
+✈️ **Honest travel guides** – The good, the challenging, and the unexpectedly magical
+
+🎒 **Solo travel tips** – Especially for women navigating the world independently
+
+🌍 **Hidden gems** – Those off-the-beaten-path places that steal your heart
+
+💭 **Real talk** – The mental health ups and downs of long-term travel
+
+🍜 **Food adventures** – Because the best way to understand a culture is through its cuisine
+
+## Current Location: Following Summer
+
+Right now, I'm somewhere between yesterday's adventure and tomorrow's discovery. I chase summer around the globe – from the beaches of Bali to the fjords of Norway, always seeking those golden hour moments when the world feels infinite.
+
+## Let's Connect
+
+Whether you're planning your first solo trip, living vicariously through my misadventures, or just need a sign to book that flight – welcome to my corner of the internet.
+
+Remember: Life begins at the end of your comfort zone, and the world is waiting.
+
+*Adventure is out there – you just have to be brave enough to find it.*
+
+**Love & wanderlust,**
+
+**Ellie** ✨`;
 
 export async function generateMetadata() {
   return {
     title: "About Me",
-    description: "Learn more about Samantha and her travel adventures",
+    description: "Learn more about Ellie and her travel adventures",
     openGraph: {
       title: "About Me",
-      description: "Learn more about Samantha and her travel adventures",
+      description: "Learn more about Ellie and her travel adventures",
       images: [
         signOgImageUrl({
-          title: "Samantha",
+          title: "Ellie",
           label: "About Me",
           brand: config.blog.name,
         }),
@@ -47,8 +78,8 @@ export async function generateMetadata() {
 const Page = async () => {
   return (
     <div className="container mx-auto px-5">
-      <Header />
-      <div className="prose lg:prose-lg dark:prose-invert m-auto mt-20 mb-10 blog-content">
+      <EnhancedHeader />
+      <div className="prose lg:prose-lg dark:prose-invert m-auto mt-20 mb-10 blog-content animate-fade-in-up">
         <Markdown>{content}</Markdown>
       </div>
       <Footer />

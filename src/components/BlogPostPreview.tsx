@@ -8,22 +8,32 @@ import { FunctionComponent } from "react";
 
 export const BlogPostPreview: FunctionComponent<{
   post: GetPostsResult["posts"][0];
-}> = ({ post }) => {
+  index?: number;
+}> = ({ post, index = 0 }) => {
   return (
-    <div className="break-words">
+    <div 
+      className="break-words group animate-fade-in-up"
+      style={{
+        animationDelay: `${index * 100}ms`,
+        animationFillMode: "backwards"
+      }}
+    >
       <Link href={`/blog/${post.slug}`}>
-        <div className="aspect-[16/9] relative">
+        <div className="aspect-[16/9] relative overflow-hidden rounded-lg">
           <Image
             alt={post.title}
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
             src={post.image || "/images/placeholder.webp"}
             fill
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </Link>
       <div className="grid grid-cols-1 gap-3 md:col-span-2 mt-4">
-        <h2 className="font-sans font-semibold tracking-tighter text-primary text-2xl md:text-3xl">
-          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        <h2 className="font-sans font-semibold tracking-tighter text-primary text-2xl md:text-3xl transition-colors duration-200 group-hover:text-primary/80">
+          <Link href={`/blog/${post.slug}`} className="hover:underline decoration-2 underline-offset-4">
+            {post.title}
+          </Link>
         </h2>
         <div className="prose lg:prose-lg italic tracking-tighter text-muted-foreground">
           {formatDate(post.publishedAt || post.updatedAt, "dd MMMM yyyy")}
@@ -31,11 +41,15 @@ export const BlogPostPreview: FunctionComponent<{
         <div className="prose lg:prose-lg leading-relaxed md:text-lg line-clamp-4 text-muted-foreground">
           {post.description}
         </div>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground flex flex-wrap gap-2">
           {post.tags.map((tag) => (
-            <div key={tag.id} className="mr-2 inline-block">
-              <Link href={`/tag/${tag.name}`}>#{tag.name}</Link>
-            </div>
+            <Link 
+              key={tag.id} 
+              href={`/tag/${tag.name}`}
+              className="inline-block px-2 py-1 rounded-md bg-accent/50 hover:bg-accent transition-colors duration-200 hover:scale-105 transform"
+            >
+              #{tag.name}
+            </Link>
           ))}
         </div>
       </div>
@@ -54,8 +68,8 @@ export const BlogPostsPreview: FunctionComponent<{
         className
       )}
     >
-      {posts.map((post) => (
-        <BlogPostPreview key={post.id} post={post} />
+      {posts.map((post, index) => (
+        <BlogPostPreview key={post.id} post={post} index={index} />
       ))}
     </div>
   );
