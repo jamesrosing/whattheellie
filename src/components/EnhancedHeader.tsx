@@ -23,9 +23,8 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { name: "Blog", href: "/" },
   { name: "About", href: "/about" },
-  // Add more pages here as needed
-  // { name: "Contact", href: "/contact" },
-  // { name: "Portfolio", href: "/portfolio" },
+  { name: "Travel Map", href: "/map" },
+  { name: "Spain Guide", href: "/spain" },
 ];
 
 export const EnhancedNavigation: FunctionComponent = () => {
