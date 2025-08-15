@@ -209,7 +209,7 @@ export default function TravelMap({ view }: TravelMapProps) {
         });
 
       // Add hover effect
-      marker.on('mouseover', function() {
+      marker.on('mouseover', function(this: L.Marker) {
         this.openPopup();
       });
     });
