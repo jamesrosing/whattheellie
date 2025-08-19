@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 blog application using React Server Components and Wisp CMS for content management. The project uses TypeScript, Tailwind CSS, Shadcn UI components, and follows the App Router pattern.
+A Next.js 15 travel blog featuring an interactive travel map, comprehensive Spain guide, and blog powered by Wisp CMS. Built with React Server Components, TypeScript, Tailwind CSS, and Shadcn UI.
 
 ## Development Commands
 
 ```bash
-# Install dependencies (React 19 compatibility issue requires legacy peer deps)
+# Install dependencies (MUST use legacy peer deps for React 19)
 npm i --legacy-peer-deps
 
 # Development server with Turbopack
@@ -18,57 +18,99 @@ npm run dev
 # Production build
 npm run build
 
-# Start production server
+# Start production server  
 npm start
 
-# Run linting
+# Linting
 npm run lint
 ```
 
-## Environment Setup
-
-Create a `.env` file with:
-```
-NEXT_PUBLIC_BLOG_ID=<your-wisp-blog-id>
-NEXT_PUBLIC_BLOG_DISPLAY_NAME=<optional>
-NEXT_PUBLIC_BLOG_COPYRIGHT=<optional>
-NEXT_PUBLIC_BASE_URL=<optional>
-OG_IMAGE_SECRET=<optional>
-```
-
-The `NEXT_PUBLIC_BLOG_ID` is required and obtained from Wisp CMS setup.
-
 ## Architecture
 
-### Core Structure
-- **App Router**: All routes in `src/app/` using Next.js 15 App Router patterns
-- **Server Components**: Default to RSC, client components marked with "use client"
-- **Data Fetching**: Wisp CMS client (`@wisp-cms/client`) for blog content
-- **Styling**: Tailwind CSS with Shadcn UI component library
+### Core Stack
+- **Next.js 15** with App Router and React 19
+- **Wisp CMS** (`@wisp-cms/client`) for blog content management  
+- **TypeScript** with strict mode and `@/` path alias for `src/`
+- **Tailwind CSS** + **Shadcn UI** components
+- **Framer Motion** for animations
+- **Leaflet** for interactive maps
 
-### Key Paths
-- `src/app/`: App Router pages and API routes
-- `src/components/`: Reusable components (UI components in `ui/` subdirectory)
-- `src/lib/`: Utilities and Wisp client configuration
-- `src/config.ts`: Central configuration file
+### Data Flow
+1. **Blog Content**: Wisp CMS → `src/lib/wisp.ts` (cached API client) → Server Components
+2. **Configuration**: Environment variables → `src/config.ts` → Components
+3. **OG Images**: Dynamic generation with signing at `/api/og-image`
 
-### Important Patterns
-- **Wisp Integration**: Configured in `src/lib/wisp.ts`, uses environment variable for blog ID
-- **Open Graph Images**: Dynamic generation via `src/app/api/og-image/` with signing mechanism
-- **Theming**: Dark mode support via `next-themes` provider
-- **Component Library**: Shadcn UI components are in `src/components/ui/`
+### Key Directories
+- `src/app/` - App Router pages and API routes
+- `src/components/` - Shared components
+- `src/components/ui/` - Shadcn UI components  
+- `src/lib/` - Utilities, Wisp client, animations
+- `src/hooks/` - Custom React hooks
 
-### Key Routes
-- `/`: Blog post listing with pagination
-- `/blog/[slug]`: Individual blog post pages
-- `/tag/[slug]`: Posts filtered by tag
-- `/about`: About page
-- `/api/og-image`: Dynamic OG image generation
-- `/rss`: RSS feed generation
+### Route Structure
+- `/` - Blog homepage with pagination
+- `/blog/[slug]` - Individual blog posts
+- `/tag/[slug]` - Posts filtered by tag
+- `/map` - Interactive travel map with Leaflet
+- `/spain` - Comprehensive Spain travel guide
+- `/api/og-image` - Dynamic OG image generation
+- `/rss` - RSS feed
 
-## Important Notes
+### Travel-Specific Components
 
-- **React 19 Compatibility**: The project uses React 19 with some dependencies requiring `--legacy-peer-deps` flag
-- **Image Optimization**: Remote images from `imagedelivery.net` are configured in `next.config.mjs`
-- **TypeScript**: Strict mode enabled with path alias `@/` for `src/` directory
-- **Deployment**: When deploying to Vercel, ensure install command uses `npm i --legacy-peer-deps`
+**TravelMap** (`src/components/TravelMap.tsx`)
+- Leaflet map with watercolor tiles
+- Custom markers: home (gold pulse), visited (coral), upcoming (teal)
+- Animated routes between destinations
+- Three view modes: Journey, Story, Mi Casa
+- Location details with blog post links
+
+**Spain Guide** (`src/app/spain/page.tsx`)  
+- 8 sections: History, Geography, Culture, Cuisine, Destinations, Hidden Gems, Festivals, Travel Tips
+- Expandable cards with Framer Motion animations
+- Lonely Planet style content organization
+
+### Environment Variables
+
+Required in `.env`:
+```
+NEXT_PUBLIC_BLOG_ID=<wisp-blog-id>  # Required
+NEXT_PUBLIC_BLOG_DISPLAY_NAME=<name>
+NEXT_PUBLIC_BLOG_COPYRIGHT=<copyright>
+NEXT_PUBLIC_BASE_URL=<base-url>
+OG_IMAGE_SECRET=<signing-secret>
+```
+
+### Critical Implementation Details
+
+**React 19 Compatibility**
+- Dependencies require `--legacy-peer-deps` flag
+- Vercel deployment: Set install command to `npm i --legacy-peer-deps`
+- Check `vercel.json` for configuration
+
+**Server Components vs Client Components**
+- Default to Server Components (no directive)
+- Use `'use client'` for interactivity (maps, animations, forms)
+- Wisp data fetching happens in Server Components only
+
+**Wisp Integration Pattern**
+- Cached read operations in `src/lib/wisp.ts`
+- Uncached write operations (comments)
+- Blog ID from environment variable
+
+**Image Handling**
+- Remote images from `imagedelivery.net` configured in `next.config.mjs`
+- Local images in `public/images/` for travel content
+- Next/Image component for optimization
+
+**Styling Hierarchy**
+1. Tailwind utility classes
+2. Shadcn UI components (`src/components/ui/`)
+3. Global styles in `app/globals.css`
+4. Component-specific animations via Framer Motion
+
+### Performance Considerations
+- Server Components for initial page load
+- React.cache() for Wisp API calls
+- Dynamic imports for heavy client components (Leaflet)
+- Turbopack in development for faster rebuilds
