@@ -75,7 +75,7 @@ export const Header: FunctionComponent = () => {
   return (
     <section className="flex items-center justify-between mt-8 md:mt-16 mb-12">
       <Link href="/">
-        <h1 className="text-4xl md:text-6xl font-display font-medium tracking-tighter leading-tight">
+        <h1 className="hero-text">
           {config.blog.name}
         </h1>
       </Link>

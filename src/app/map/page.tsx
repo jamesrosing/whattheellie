@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { EnhancedHeader } from "@/components/EnhancedHeader";
 import { Plane, Home, Camera, Calendar, MapPin, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -37,9 +37,9 @@ export default function MapPage() {
   const [showStats, setShowStats] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F4E8D0] to-white">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-5">
-        <Header />
+        <EnhancedHeader />
         
         {/* Page Title with Animation */}
         <motion.div 
@@ -47,10 +47,10 @@ export default function MapPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center my-8"
         >
-          <h1 className="text-4xl md:text-5xl font-display font-medium text-[#3E2723] mb-4">
+          <h1 className="text-h1 text-foreground mb-4">
             My Adventure Map
           </h1>
-          <p className="text-lg text-[#8B7355]">
+          <p className="text-lg text-muted-foreground">
             From my home in Spain to the corners of the world
           </p>
         </motion.div>
@@ -61,8 +61,8 @@ export default function MapPage() {
             onClick={() => setSelectedView('journey')}
             className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
               selectedView === 'journey' 
-                ? 'bg-[#FF6B6B] text-white shadow-lg' 
-                : 'bg-white text-[#8B7355] hover:shadow-md'
+                ? 'bg-primary text-primary-foreground shadow-lg' 
+                : 'bg-card text-muted-foreground hover:shadow-md'
             }`}
           >
             <Plane className="w-5 h-5" />
@@ -73,8 +73,8 @@ export default function MapPage() {
             onClick={() => setSelectedView('stories')}
             className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
               selectedView === 'stories' 
-                ? 'bg-[#4ECDC4] text-white shadow-lg' 
-                : 'bg-white text-[#8B7355] hover:shadow-md'
+                ? 'bg-accent text-accent-foreground shadow-lg' 
+                : 'bg-card text-muted-foreground hover:shadow-md'
             }`}
           >
             <Camera className="w-5 h-5" />
@@ -85,8 +85,8 @@ export default function MapPage() {
             onClick={() => setSelectedView('home')}
             className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
               selectedView === 'home' 
-                ? 'bg-[#FFD700] text-[#3E2723] shadow-lg' 
-                : 'bg-white text-[#8B7355] hover:shadow-md'
+                ? 'bg-primary text-primary-foreground shadow-lg' 
+                : 'bg-card text-muted-foreground hover:shadow-md'
             }`}
           >
             <Home className="w-5 h-5" />
@@ -103,9 +103,9 @@ export default function MapPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowStats(!showStats)}
-            className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg"
+            className="absolute top-4 right-4 bg-card/90 backdrop-blur-sm p-3 rounded-full shadow-lg dark:shadow-xl"
           >
-            <Calendar className="w-6 h-6 text-[#8B7355]" />
+            <Calendar className="w-6 h-6 text-muted-foreground" />
           </motion.button>
         </div>
 
@@ -124,12 +124,12 @@ export default function MapPage() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl p-4 text-center shadow-md"
+                  className="bg-card rounded-xl p-4 text-center shadow-md dark:shadow-xl"
                 >
-                  <div className="text-3xl font-bold text-[#FF6B6B]">
+                  <div className="text-3xl font-bold text-primary">
                     {value.toLocaleString()}
                   </div>
-                  <div className="text-sm text-[#8B7355] capitalize">
+                  <div className="text-sm text-muted-foreground capitalize">
                     {key}
                   </div>
                 </motion.div>
@@ -139,12 +139,12 @@ export default function MapPage() {
         </AnimatePresence>
 
         {/* Story Section for Selected Location */}
-        <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-[#3E2723] mb-4">
+        <div className="bg-card rounded-2xl p-8 mb-8 shadow-lg dark:shadow-xl">
+          <h2 className="text-2xl font-bold text-foreground mb-4">
             Featured Adventure
           </h2>
           <div className="prose prose-lg max-w-none">
-            <p className="text-[#8B7355]">
+            <p className="text-muted-foreground">
               Click on any location on the map to explore the stories, photos, and memories 
               from that adventure. Each pin holds a unique chapter of my journey.
             </p>

@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { EnhancedHeader } from "@/components/EnhancedHeader";
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   MapPin, Clock, Users, Mountain, Utensils, Music, 
@@ -39,28 +39,28 @@ export default function SpainGuidePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-5">
-        <Header />
+        <EnhancedHeader />
         
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="relative h-[400px] rounded-3xl overflow-hidden mb-8"
+          className="relative h-[400px] rounded-3xl overflow-hidden mb-8 bg-gradient-to-r from-red-600 to-yellow-500"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-yellow-500 opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-red-600/90 to-yellow-500/90 dark:from-red-700/90 dark:to-yellow-600/90" />
           <div className="absolute inset-0 flex items-center justify-center text-white">
             <div className="text-center">
-              <h1 className="text-5xl md:text-7xl font-display font-medium mb-4">España</h1>
-              <p className="text-xl md:text-2xl font-cerebri font-light mb-2">The Complete Guide</p>
+              <h1 className="hero-text text-white mb-4">España</h1>
+              <p className="hero-tagline text-xl md:text-2xl text-white/95 mb-2">The Complete Guide</p>
               <p className="text-lg opacity-90">History • Culture • Adventures • Secrets</p>
             </div>
           </div>
         </motion.div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-2xl shadow-lg p-4 mb-8 sticky top-0 z-40">
+        <div className="bg-card rounded-2xl shadow-lg dark:shadow-xl p-4 mb-8 sticky top-0 z-40">
           <div className="flex overflow-x-auto gap-2 pb-2">
             {sections.map((section) => {
               const Icon = section.icon;
@@ -70,8 +70,8 @@ export default function SpainGuidePage() {
                   onClick={() => setActiveSection(section.id)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
                     activeSection === section.id
-                      ? 'bg-red-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary text-primary-foreground shadow-lg'
+                      : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -92,9 +92,9 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Clock className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Clock className="w-8 h-8 text-primary" />
                   5,000 Years of Spanish History
                 </h2>
                 
@@ -195,13 +195,13 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Mountain className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Mountain className="w-8 h-8 text-primary" />
                   The Lay of the Land
                 </h2>
 
-                <div className="prose prose-lg max-w-none text-gray-700 mb-8">
+                <div className="prose prose-lg max-w-none text-foreground mb-8">
                   <p>
                     Spain is Europe's most geographically diverse country, occupying 85% of the Iberian Peninsula. 
                     At 505,990 km², it's Western Europe's second-largest country, with landscapes ranging from 
@@ -299,13 +299,13 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Users className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Users className="w-8 h-8 text-primary" />
                   The Spanish People & Culture
                 </h2>
 
-                <div className="prose prose-lg max-w-none text-gray-700 mb-8">
+                <div className="prose prose-lg max-w-none text-foreground mb-8">
                   <p>
                     Spain's 47 million inhabitants aren't a monolithic group but a vibrant tapestry of regional 
                     identities, languages, and traditions. Understanding Spain means understanding that a Galician 
@@ -320,26 +320,26 @@ export default function SpainGuidePage() {
                     icon={Book}
                     content={
                       <div className="space-y-4">
-                        <p className="text-gray-700">
+                        <p className="text-foreground">
                           While Castilian Spanish is the official national language, Spain recognizes four co-official 
                           regional languages, each representing distinct cultural identities:
                         </p>
                         <div className="grid md:grid-cols-2 gap-4">
-                          <div className="p-4 bg-gray-50 rounded-lg">
-                            <h4 className="font-semibold text-red-700">Catalan/Valencian</h4>
-                            <p className="text-sm text-gray-600">10 million speakers in Catalonia, Valencia, Balearics. Closer to French than Spanish.</p>
+                          <div className="p-4 bg-muted rounded-lg">
+                            <h4 className="font-semibold text-primary">Catalan/Valencian</h4>
+                            <p className="text-sm text-muted-foreground">10 million speakers in Catalonia, Valencia, Balearics. Closer to French than Spanish.</p>
                           </div>
-                          <div className="p-4 bg-gray-50 rounded-lg">
-                            <h4 className="font-semibold text-red-700">Galician</h4>
-                            <p className="text-sm text-gray-600">2.4 million speakers. Related to Portuguese, Celtic influence in culture.</p>
+                          <div className="p-4 bg-muted rounded-lg">
+                            <h4 className="font-semibold text-primary">Galician</h4>
+                            <p className="text-sm text-muted-foreground">2.4 million speakers. Related to Portuguese, Celtic influence in culture.</p>
                           </div>
-                          <div className="p-4 bg-gray-50 rounded-lg">
-                            <h4 className="font-semibold text-red-700">Basque (Euskera)</h4>
-                            <p className="text-sm text-gray-600">750,000 speakers. Europe's oldest language, predating Indo-European languages.</p>
+                          <div className="p-4 bg-muted rounded-lg">
+                            <h4 className="font-semibold text-primary">Basque (Euskera)</h4>
+                            <p className="text-sm text-muted-foreground">750,000 speakers. Europe's oldest language, predating Indo-European languages.</p>
                           </div>
-                          <div className="p-4 bg-gray-50 rounded-lg">
-                            <h4 className="font-semibold text-red-700">Aranese</h4>
-                            <p className="text-sm text-gray-600">5,000 speakers in Val d'Aran. Variety of Occitan from southern France.</p>
+                          <div className="p-4 bg-muted rounded-lg">
+                            <h4 className="font-semibold text-primary">Aranese</h4>
+                            <p className="text-sm text-muted-foreground">5,000 speakers in Val d'Aran. Variety of Occitan from southern France.</p>
                           </div>
                         </div>
                       </div>
@@ -385,7 +385,7 @@ export default function SpainGuidePage() {
                     icon={Music}
                     content={
                       <div className="space-y-4">
-                        <p className="text-gray-700">
+                        <p className="text-foreground">
                           Born in Andalucía from the fusion of Romani, Moorish, Jewish, and Andalusian cultures, 
                           flamenco is Spain's most visceral art form. UNESCO recognized it as Intangible Cultural Heritage.
                         </p>
@@ -422,13 +422,13 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Utensils className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Utensils className="w-8 h-8 text-primary" />
                   Spanish Cuisine: A Regional Feast
                 </h2>
 
-                <div className="prose prose-lg max-w-none text-gray-700 mb-8">
+                <div className="prose prose-lg max-w-none text-foreground mb-8">
                   <p>
                     Spanish cuisine is not one but many - each region fiercely proud of its specialties. From 
                     Michelin-starred molecular gastronomy to humble tapas bars unchanged for centuries, Spain 
@@ -545,9 +545,9 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <MapPin className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <MapPin className="w-8 h-8 text-primary" />
                   Essential Destinations
                 </h2>
 
@@ -648,13 +648,13 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Compass className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Compass className="w-8 h-8 text-primary" />
                   Hidden Gems & Secret Spain
                 </h2>
 
-                <div className="prose prose-lg max-w-none text-gray-700 mb-8">
+                <div className="prose prose-lg max-w-none text-foreground mb-8">
                   <p>
                     Beyond the tourist trail lies the Spain that Spaniards keep to themselves - whitewashed villages 
                     clinging to cliffsides, secret beaches accessible only by footpath, and towns where time stopped 
@@ -734,13 +734,13 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Calendar className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Calendar className="w-8 h-8 text-primary" />
                   Festivals & Celebrations
                 </h2>
 
-                <div className="prose prose-lg max-w-none text-gray-700 mb-8">
+                <div className="prose prose-lg max-w-none text-foreground mb-8">
                   <p>
                     Spain doesn't just celebrate - it explodes in joy. Every town has its festa, from solemn 
                     religious processions to chaotic food fights. These aren't tourist shows but genuine 
@@ -820,9 +820,9 @@ export default function SpainGuidePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
-                  <Info className="w-8 h-8 text-red-600" />
+              <div className="bg-card rounded-2xl p-8 shadow-lg dark:shadow-xl">
+                <h2 className="text-h2 text-foreground mb-6 flex items-center gap-3">
+                  <Info className="w-8 h-8 text-primary" />
                   Essential Travel Intelligence
                 </h2>
 
@@ -901,8 +901,8 @@ export default function SpainGuidePage() {
                 </div>
 
                 <div className="mt-8 p-6 bg-red-50 rounded-xl">
-                  <h3 className="text-xl font-bold text-red-900 mb-3">Avoid These Mistakes</h3>
-                  <ul className="space-y-2 text-red-800">
+                  <h3 className="text-xl font-bold text-destructive mb-3">Avoid These Mistakes</h3>
+                  <ul className="space-y-2 text-destructive-foreground">
                     <li>❌ Expecting paella everywhere (it's Valencian)</li>
                     <li>❌ Ordering sangria (locals drink tinto de verano)</li>
                     <li>❌ Speaking loud English assuming no one understands</li>
@@ -942,7 +942,7 @@ function TimelineItem({
 }) {
   return (
     <div className="border-l-4 border-red-600 pl-6">
-      <div className="text-sm text-red-600 font-semibold">{era}</div>
+      <div className="text-sm text-primary font-semibold">{era}</div>
       <h3 className="text-2xl font-bold text-gray-900 mt-1">{title}</h3>
       <p className="text-gray-700 mt-2">{description}</p>
       
@@ -950,7 +950,7 @@ function TimelineItem({
         {highlights.map((highlight, index) => (
           <div key={index} className="flex items-start gap-2">
             <MapPin className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
-            <span className="text-sm text-gray-600">{highlight}</span>
+            <span className="text-sm text-muted-foreground">{highlight}</span>
           </div>
         ))}
       </div>
@@ -1005,7 +1005,7 @@ function RegionCard({
           <p className="text-gray-700 mt-2">{description}</p>
           <ul className="mt-3 space-y-1">
             {details.map((detail, index) => (
-              <li key={index} className="text-sm text-gray-600">• {detail}</li>
+              <li key={index} className="text-sm text-muted-foreground">• {detail}</li>
             ))}
           </ul>
         </div>
@@ -1059,7 +1059,7 @@ function CuisineCard({
       <p className="text-gray-700 mb-4">{description}</p>
       <ul className="space-y-2">
         {dishes.map((dish, index) => (
-          <li key={index} className="text-sm text-gray-600">• {dish}</li>
+          <li key={index} className="text-sm text-muted-foreground">• {dish}</li>
         ))}
       </ul>
     </div>
@@ -1097,7 +1097,7 @@ function DestinationCard({
           <h4 className="font-semibold text-gray-900 mb-2">Must See:</h4>
           <ul className="space-y-1">
             {mustSee.map((item, index) => (
-              <li key={index} className="text-sm text-gray-600">• {item}</li>
+              <li key={index} className="text-sm text-muted-foreground">• {item}</li>
             ))}
           </ul>
         </div>
@@ -1143,7 +1143,7 @@ function HiddenGemCard({
           <p className="text-sm text-emerald-900"><strong>The Secret:</strong> {secret}</p>
         </div>
         
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           <strong>How to Reach:</strong> {howToReach}
         </div>
       </div>

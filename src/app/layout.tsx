@@ -3,7 +3,9 @@ import { signOgImageUrl } from "@/lib/og-image";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+import "./fonts.css";
 import { Providers } from "./providers";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -33,6 +35,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Adobe Typekit for Garamond Premier Pro */}
+        <link rel="stylesheet" href="https://use.typekit.net/hzy3gvm.css" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-cerebri antialiased max-w-6xl m-auto",

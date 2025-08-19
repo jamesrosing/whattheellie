@@ -30,15 +30,15 @@ export const BlogPostPreview: FunctionComponent<{
         </div>
       </Link>
       <div className="grid grid-cols-1 gap-3 md:col-span-2 mt-4">
-        <h2 className="font-display font-medium tracking-tighter text-primary text-2xl md:text-3xl transition-colors duration-200 group-hover:text-primary/80">
+        <h2 className="text-h2 text-primary transition-colors duration-200 group-hover:text-primary/80">
           <Link href={`/blog/${post.slug}`} className="hover:underline decoration-2 underline-offset-4">
             {post.title}
           </Link>
         </h2>
-        <div className="prose lg:prose-lg italic tracking-tighter text-muted-foreground">
+        <div className="caption italic text-muted-foreground">
           {formatDate(post.publishedAt || post.updatedAt, "dd MMMM yyyy")}
         </div>
-        <div className="prose lg:prose-lg leading-relaxed md:text-lg line-clamp-4 text-muted-foreground">
+        <div className="text-body leading-relaxed md:text-lg line-clamp-4 text-muted-foreground">
           {post.description}
         </div>
         <div className="text-sm text-muted-foreground flex flex-wrap gap-2">
