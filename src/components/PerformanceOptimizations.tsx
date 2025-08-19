@@ -270,11 +270,15 @@ export const getBundleInfo = () => {
 export const createAsyncComponent = (loader: () => Promise<any>) => {
   const AsyncComponent = lazy(loader);
   
-  return memo((props: any) => (
+  const MemoizedComponent = memo((props: any) => (
     <Suspense fallback={<ContentSkeleton lines={3} />}>
       <AsyncComponent {...props} />
     </Suspense>
   ));
+  
+  MemoizedComponent.displayName = 'AsyncComponent';
+  
+  return MemoizedComponent;
 };
 
 // Export display names for debugging
