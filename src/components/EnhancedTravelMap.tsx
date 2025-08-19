@@ -279,12 +279,12 @@ export default function EnhancedTravelMap({ view, className = '', onLocationSele
       },
     };
 
-    const config = iconConfigs[location.type];
+    const config = iconConfigs[location.type as keyof typeof iconConfigs] || iconConfigs.visited;
     return L.divIcon({
       html: config.html,
       className: 'custom-marker-enhanced',
-      iconSize: config.size,
-      iconAnchor: config.anchor,
+      iconSize: config.size as [number, number],
+      iconAnchor: config.anchor as [number, number],
     });
   }, []);
 
