@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Menu, X, ArrowUp } from 'lucide-react';
 
 // Enhanced mobile navigation drawer
-export const MobileDrawer = ({ 
-  isOpen, 
-  onClose, 
-  children, 
-  className = '' 
+export const MobileDrawer = ({
+  isOpen,
+  onClose,
+  children,
+  className = '',
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -19,11 +19,17 @@ export const MobileDrawer = ({
   const y = useMotionValue(0);
   const opacity = useTransform(y, [0, 300], [1, 0]);
 
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (_event: any, info: PanInfo) => {
     if (info.velocity.y > 500 || info.offset.y > 150) {
       onClose();
     }
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      y.set(0);
+    }
+  }, [isOpen, y]);
 
   return (
     <motion.div
@@ -31,12 +37,16 @@ export const MobileDrawer = ({
       animate={{ opacity: isOpen ? 1 : 0 }}
       exit={{ opacity: 0 }}
       className={`fixed inset-0 z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      aria-modal={isOpen}
+      role="dialog"
     >
       {/* Backdrop */}
       <motion.div
         className="absolute inset-0 bg-black"
         style={{ opacity }}
         onClick={onClose}
+        aria-label="Close drawer"
+        tabIndex={-1}
       />
 
       {/* Drawer */}
@@ -66,12 +76,12 @@ export const MobileDrawer = ({
 };
 
 // Swipeable card component for mobile
-export const SwipeableCard = ({ 
-  children, 
-  onSwipeLeft, 
+export const SwipeableCard = ({
+  children,
+  onSwipeLeft,
   onSwipeRight,
   className = '',
-  threshold = 100 
+  threshold = 100,
 }: {
   children: React.ReactNode;
   onSwipeLeft?: () => void;
@@ -83,13 +93,16 @@ export const SwipeableCard = ({
   const scale = useTransform(x, [-threshold, 0, threshold], [0.95, 1, 0.95]);
   const rotate = useTransform(x, [-threshold, 0, threshold], [-10, 0, 10]);
 
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (_event: any, info: PanInfo) => {
     if (Math.abs(info.offset.x) > threshold) {
       if (info.offset.x > 0 && onSwipeRight) {
         onSwipeRight();
       } else if (info.offset.x < 0 && onSwipeLeft) {
         onSwipeLeft();
       }
+      x.set(0);
+    } else {
+      x.set(0);
     }
   };
 
@@ -109,16 +122,16 @@ export const SwipeableCard = ({
 };
 
 // Touch-optimized carousel
-export const TouchCarousel = ({ 
-  items, 
-  children,
+export const TouchCarousel = ({
+  items,
+  renderItem,
   className = '',
   itemClassName = '',
   autoPlay = false,
-  autoPlayDelay = 3000
+  autoPlayDelay = 3000,
 }: {
   items: any[];
-  children: (item: any, index: number) => React.ReactNode;
+  renderItem: (item: any, index: number) => React.ReactNode;
   className?: string;
   itemClassName?: string;
   autoPlay?: boolean;
@@ -126,7 +139,7 @@ export const TouchCarousel = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const autoPlayRef = useRef<NodeJS.Timeout>();
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % items.length);
@@ -143,13 +156,20 @@ export const TouchCarousel = ({
       return () => {
         if (autoPlayRef.current) {
           clearInterval(autoPlayRef.current);
+          autoPlayRef.current = null;
         }
       };
     }
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+        autoPlayRef.current = null;
+      }
+    };
   }, [autoPlay, autoPlayDelay, nextSlide]);
 
   // Touch handling
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (_event: any, info: PanInfo) => {
     const threshold = 50;
     if (info.offset.x > threshold) {
       prevSlide();
@@ -161,17 +181,18 @@ export const TouchCarousel = ({
   const pauseAutoPlay = () => {
     if (autoPlayRef.current) {
       clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
     }
   };
 
   const resumeAutoPlay = () => {
-    if (autoPlay) {
+    if (autoPlay && !autoPlayRef.current) {
       autoPlayRef.current = setInterval(nextSlide, autoPlayDelay);
     }
   };
 
   return (
-    <div 
+    <div
       className={`relative overflow-hidden ${className}`}
       onTouchStart={pauseAutoPlay}
       onTouchEnd={resumeAutoPlay}
@@ -184,7 +205,7 @@ export const TouchCarousel = ({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.1}
         onDragEnd={handleDragEnd}
-        animate={{ x: -currentIndex * 100 + '%' }}
+        animate={{ x: `-${currentIndex * 100}%` }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className="flex touch-pan-y"
       >
@@ -194,7 +215,7 @@ export const TouchCarousel = ({
             className={`min-w-full ${itemClassName}`}
             style={{ flex: '0 0 100%' }}
           >
-            {children(item, index)}
+            {renderItem(item, index)}
           </motion.div>
         ))}
       </motion.div>
@@ -211,6 +232,7 @@ export const TouchCarousel = ({
                 : 'bg-gray-300 hover:bg-gray-400'
             }`}
             aria-label={`Go to slide ${index + 1}`}
+            type="button"
           />
         ))}
       </div>
@@ -221,6 +243,7 @@ export const TouchCarousel = ({
           onClick={prevSlide}
           className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-colors"
           aria-label="Previous slide"
+          type="button"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -228,6 +251,7 @@ export const TouchCarousel = ({
           onClick={nextSlide}
           className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-colors"
           aria-label="Next slide"
+          type="button"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -237,11 +261,11 @@ export const TouchCarousel = ({
 };
 
 // Mobile-optimized tab navigation
-export const MobileTabNavigation = ({ 
-  tabs, 
-  activeTab, 
+export const MobileTabNavigation = ({
+  tabs,
+  activeTab,
   onTabChange,
-  className = '' 
+  className = '',
 }: {
   tabs: { id: string; label: string; icon?: React.ReactNode }[];
   activeTab: string;
@@ -249,7 +273,7 @@ export const MobileTabNavigation = ({
   className?: string;
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const activeTabData = tabs.find(tab => tab.id === activeTab);
+  const activeTabData = tabs.find((tab) => tab.id === activeTab);
 
   return (
     <>
@@ -258,6 +282,8 @@ export const MobileTabNavigation = ({
         <button
           onClick={() => setIsDrawerOpen(true)}
           className="flex items-center justify-between w-full p-4 bg-white rounded-lg shadow-md"
+          type="button"
+          aria-label="Open tab navigation"
         >
           <div className="flex items-center gap-3">
             {activeTabData?.icon}
@@ -278,6 +304,8 @@ export const MobileTabNavigation = ({
                 ? 'bg-blue-500 text-white shadow-lg'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
+            type="button"
+            aria-current={activeTab === tab.id ? 'page' : undefined}
           >
             {tab.icon}
             <span>{tab.label}</span>
@@ -293,11 +321,13 @@ export const MobileTabNavigation = ({
             <button
               onClick={() => setIsDrawerOpen(false)}
               className="p-2 rounded-full hover:bg-gray-100"
+              type="button"
+              aria-label="Close tab navigation"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -310,6 +340,8 @@ export const MobileTabNavigation = ({
                   ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-700'
                   : 'hover:bg-gray-50'
               }`}
+              type="button"
+              aria-current={activeTab === tab.id ? 'page' : undefined}
             >
               {tab.icon}
               <span className="font-medium">{tab.label}</span>
@@ -322,11 +354,11 @@ export const MobileTabNavigation = ({
 };
 
 // Pull-to-refresh component
-export const PullToRefresh = ({ 
-  onRefresh, 
+export const PullToRefresh = ({
+  onRefresh,
   children,
   className = '',
-  threshold = 80 
+  threshold = 80,
 }: {
   onRefresh: () => Promise<void>;
   children: React.ReactNode;
@@ -337,13 +369,13 @@ export const PullToRefresh = ({
   const [pullDistance, setPullDistance] = useState(0);
   const y = useMotionValue(0);
 
-  const handleDrag = (event: any, info: PanInfo) => {
+  const handleDrag = (_event: any, info: PanInfo) => {
     if (info.offset.y > 0) {
       setPullDistance(info.offset.y);
     }
   };
 
-  const handleDragEnd = async (event: any, info: PanInfo) => {
+  const handleDragEnd = async (_event: any, info: PanInfo) => {
     if (info.offset.y > threshold && !isRefreshing) {
       setIsRefreshing(true);
       try {
@@ -376,24 +408,23 @@ export const PullToRefresh = ({
       >
         <div className="flex items-center gap-2 text-blue-600">
           <motion.div
-            animate={{ 
-              rotate: isRefreshing ? 360 : pullProgress * 180 
+            animate={{
+              rotate: isRefreshing ? 360 : pullProgress * 180,
             }}
             transition={{
-              rotate: isRefreshing 
-                ? { duration: 1, repeat: Infinity, ease: "linear" }
-                : { duration: 0.2 }
+              rotate: isRefreshing
+                ? { duration: 1, repeat: Infinity, ease: 'linear' }
+                : { duration: 0.2 },
             }}
           >
             <ArrowUp className="w-5 h-5" />
           </motion.div>
           <span className="text-sm font-medium">
-            {isRefreshing 
-              ? 'Refreshing...' 
-              : pullProgress >= 1 
-                ? 'Release to refresh' 
-                : 'Pull to refresh'
-            }
+            {isRefreshing
+              ? 'Refreshing...'
+              : pullProgress >= 1
+              ? 'Release to refresh'
+              : 'Pull to refresh'}
           </span>
         </div>
       </motion.div>
@@ -404,12 +435,12 @@ export const PullToRefresh = ({
 };
 
 // Accessible touch target component
-export const TouchTarget = ({ 
-  children, 
+export const TouchTarget = ({
+  children,
   onPress,
   className = '',
   minSize = 44,
-  hapticFeedback = false 
+  hapticFeedback = false,
 }: {
   children: React.ReactNode;
   onPress: () => void;
@@ -417,22 +448,31 @@ export const TouchTarget = ({
   minSize?: number;
   hapticFeedback?: boolean;
 }) => {
-  const handlePress = () => {
-    if (hapticFeedback && 'vibrate' in navigator) {
+  const handlePress = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (hapticFeedback && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       navigator.vibrate(10);
     }
     onPress();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handlePress(e);
+    }
   };
 
   return (
     <motion.button
       whileTap={{ scale: 0.95 }}
       onClick={handlePress}
+      onKeyDown={handleKeyDown}
       className={`inline-flex items-center justify-center ${className}`}
       style={{ minHeight: minSize, minWidth: minSize }}
       // Accessibility
       role="button"
       tabIndex={0}
+      type="button"
     >
       {children}
     </motion.button>
