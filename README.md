@@ -42,7 +42,6 @@ Wisp is a modern CMS for adding blogs to websites. It features an intuitive, med
 - Beautiful blog starter kit with server rendering using Next.js 15 Server Components
 - Responsive layout for mobile devices
 - Filter blog posts by tags
-- Personalized About page with Ellie's story
 - Light & dark mode
 - Automatic hierarchical sitemap generation
 - Automatic Open Graph image generation
@@ -111,7 +110,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### Available Routes
 
 - `/` - Blog homepage with latest posts
-- `/about` - About Ellie and her journey
 - `/map` - Interactive travel map
 - `/spain` - Comprehensive Spain travel guide
 - `/blog/[slug]` - Individual blog posts

@@ -105,6 +105,9 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        cerebri: ["'Cerebri Sans'", ...fontFamily.sans],
+        display: ["'Cerebri Sans'", ...fontFamily.sans],
+        body: ["'Cerebri Sans'", ...fontFamily.sans],
       },
     },
   },

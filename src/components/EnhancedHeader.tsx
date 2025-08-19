@@ -126,7 +126,7 @@ export const EnhancedHeader: FunctionComponent = () => {
         href="/"
         className="group"
       >
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight transition-all duration-300 hover:scale-105 hover:text-primary">
+        <h1 className="text-4xl md:text-6xl font-display font-medium tracking-tighter leading-tight transition-all duration-300 hover:scale-105 hover:text-primary">
           {config.blog.name}
         </h1>
       </Link>

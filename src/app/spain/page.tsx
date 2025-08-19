@@ -52,8 +52,8 @@ export default function SpainGuidePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-yellow-500 opacity-90" />
           <div className="absolute inset-0 flex items-center justify-center text-white">
             <div className="text-center">
-              <h1 className="text-5xl md:text-7xl font-bold mb-4">España</h1>
-              <p className="text-xl md:text-2xl mb-2">The Complete Guide</p>
+              <h1 className="text-5xl md:text-7xl font-display font-medium mb-4">España</h1>
+              <p className="text-xl md:text-2xl font-cerebri font-light mb-2">The Complete Guide</p>
               <p className="text-lg opacity-90">History • Culture • Adventures • Secrets</p>
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Clock className="w-8 h-8 text-red-600" />
                   5,000 Years of Spanish History
                 </h2>
@@ -196,7 +196,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Mountain className="w-8 h-8 text-red-600" />
                   The Lay of the Land
                 </h2>
@@ -300,7 +300,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Users className="w-8 h-8 text-red-600" />
                   The Spanish People & Culture
                 </h2>
@@ -423,7 +423,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Utensils className="w-8 h-8 text-red-600" />
                   Spanish Cuisine: A Regional Feast
                 </h2>
@@ -546,7 +546,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <MapPin className="w-8 h-8 text-red-600" />
                   Essential Destinations
                 </h2>
@@ -649,7 +649,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Compass className="w-8 h-8 text-red-600" />
                   Hidden Gems & Secret Spain
                 </h2>
@@ -735,7 +735,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Calendar className="w-8 h-8 text-red-600" />
                   Festivals & Celebrations
                 </h2>
@@ -821,7 +821,7 @@ export default function SpainGuidePage() {
               className="space-y-8"
             >
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <h2 className="text-3xl font-display font-medium text-gray-900 mb-6 flex items-center gap-3">
                   <Info className="w-8 h-8 text-red-600" />
                   Essential Travel Intelligence
                 </h2>

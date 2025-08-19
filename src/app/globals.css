@@ -2,6 +2,37 @@
   @tailwind components;
   @tailwind utilities;
 
+  /* Cerebri Sans Font Face Declarations */
+  @font-face {
+    font-family: 'Cerebri Sans';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('/fonts/CerebriSansLight.woff2') format('woff2'),
+         url('/fonts/CerebriSansLight.woff') format('woff'),
+         url('/fonts/CerebriSansLight.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Cerebri Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/CerebriSansBook.woff2') format('woff2'),
+         url('/fonts/CerebriSansBook.woff') format('woff'),
+         url('/fonts/CerebriSansBook.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Cerebri Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/CerebriSansMedium.woff2') format('woff2'),
+         url('/fonts/CerebriSansMedium.woff') format('woff'),
+         url('/fonts/CerebriSansMedium.ttf') format('truetype');
+  }
+
   @layer base {
     :root {
       --background: 0 0% 100%;
@@ -72,6 +103,16 @@
     }
     body {
       @apply bg-background text-foreground;
+    }
+    
+    /* Apply Cerebri Sans to headings */
+    h1, h2, h3, h4, h5, h6 {
+      @apply font-display;
+    }
+    
+    /* Better readability for body text */
+    p, li {
+      @apply font-cerebri font-light;
     }
 
     .blog-content img {

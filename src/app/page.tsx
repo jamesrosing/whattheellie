@@ -46,7 +46,7 @@ const Page = async ({ searchParams }: PageProps) => {
       <div className="container mx-auto px-5 mb-10">
         <EnhancedHeader />
         <div className="text-center py-10">
-          <h2 className="text-2xl font-semibold">Unable to load posts</h2>
+          <h2 className="text-2xl font-display font-medium">Unable to load posts</h2>
           <p className="text-muted-foreground mt-2">Please try again later.</p>
         </div>
         <Footer />

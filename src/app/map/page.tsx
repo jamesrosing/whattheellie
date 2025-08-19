@@ -47,7 +47,7 @@ export default function MapPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center my-8"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-[#3E2723] mb-4">
+          <h1 className="text-4xl md:text-5xl font-display font-medium text-[#3E2723] mb-4">
             My Adventure Map
           </h1>
           <p className="text-lg text-[#8B7355]">
