@@ -4,7 +4,9 @@
       "Bash(rm:*)",
       "mcp__sequential__sequentialthinking",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(wget:*)",
+      "WebFetch(domain:docs.mapbox.com)"
     ],
     "deny": [],
     "ask": []

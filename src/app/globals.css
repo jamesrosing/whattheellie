@@ -92,4 +92,58 @@
     .blog-content img {
       @apply w-full;
     }
+    
+    /* Leaflet Map Styles */
+    .leaflet-container {
+      @apply rounded-2xl;
+      font-family: 'Cerebri Sans', sans-serif !important;
+    }
+    
+    .leaflet-popup-content-wrapper {
+      @apply rounded-lg shadow-xl;
+    }
+    
+    .leaflet-popup-content {
+      @apply m-0 p-0;
+    }
+    
+    .custom-div-icon {
+      background: transparent;
+      border: none;
+    }
+    
+    /* Fix for marker animations */
+    .leaflet-marker-icon {
+      transition: transform 0.3s ease;
+    }
+    
+    .leaflet-marker-icon:hover {
+      transform: scale(1.1);
+    }
+    
+    /* Mapbox GL Styles */
+    .mapboxgl-canvas {
+      @apply rounded-2xl;
+    }
+    
+    .mapboxgl-popup {
+      max-width: 400px !important;
+    }
+    
+    .mapboxgl-popup-content {
+      @apply rounded-lg shadow-xl p-0;
+      font-family: 'Cerebri Sans', sans-serif !important;
+    }
+    
+    .mapboxgl-popup-close-button {
+      @apply text-2xl leading-none p-2;
+    }
+    
+    .mapboxgl-ctrl-group {
+      @apply shadow-lg rounded-lg;
+    }
+    
+    .custom-marker {
+      cursor: pointer;
+    }
   }

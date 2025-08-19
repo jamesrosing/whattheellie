@@ -8,15 +8,15 @@ import { Plane, Home, Camera, Calendar, MapPin, Navigation } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Dynamically import map component to avoid SSR issues
-const MapComponent = dynamic(() => import('@/components/TravelMap'), {
+const MapComponent = dynamic(() => import('@/components/MapboxTravelMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[600px] bg-[#F4E8D0] flex items-center justify-center">
+    <div className="w-full h-[600px] bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl flex items-center justify-center">
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
       >
-        <Navigation className="w-8 h-8 text-amber-600" />
+        <Navigation className="w-8 h-8 text-primary" />
       </motion.div>
     </div>
   ),
