@@ -14,6 +14,12 @@ import { cn } from '@/lib/utils';
 // Set the Mapbox access token
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
+// Debug logging for token
+console.log('🗺️ Mapbox Debug Info:');
+console.log('Token available:', !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
+console.log('Token length:', process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.length || 0);
+console.log('Token starts with pk:', process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.startsWith('pk.') || false);
+
 // Travel locations data with real coordinates
 const locations = [
   {
@@ -119,18 +125,35 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
 
   // Initialize map
   useEffect(() => {
-    if (!mapContainer.current || map.current) return;
+    console.log('🗺️ Map useEffect triggered');
+    console.log('Container available:', !!mapContainer.current);
+    console.log('Map already exists:', !!map.current);
+    console.log('Current style:', currentStyle);
+    console.log('View:', view);
+    console.log('is3D:', is3D);
+    
+    if (!mapContainer.current || map.current) {
+      console.log('🗺️ Early return:', !mapContainer.current ? 'no container' : 'map exists');
+      return;
+    }
 
-    // Create the map
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: `mapbox://styles/mapbox/${currentStyle}`,
-      center: view === 'home' ? [-3.7038, 40.4168] : [10, 45],
-      zoom: view === 'home' ? 8 : 4,
-      pitch: is3D ? 45 : 0,
-      bearing: 0,
-      antialias: true,
-    });
+    try {
+      console.log('🗺️ Creating Mapbox map...');
+      // Create the map
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: `mapbox://styles/mapbox/${currentStyle}`,
+        center: view === 'home' ? [-3.7038, 40.4168] : [10, 45],
+        zoom: view === 'home' ? 8 : 4,
+        pitch: is3D ? 45 : 0,
+        bearing: 0,
+        antialias: true,
+      });
+      console.log('🗺️ Map created successfully');
+    } catch (error) {
+      console.error('🗺️ Error creating map:', error);
+      return;
+    }
 
     const mapInstance = map.current;
 
