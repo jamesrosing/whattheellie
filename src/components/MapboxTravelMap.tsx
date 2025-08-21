@@ -7,18 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, MapPin, Calendar, Heart, Navigation, Camera, 
   Plane, Home, Mountain, Layers, Globe, Sun, Moon,
-  ZoomIn, ZoomOut, Compass
+  Menu
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Set the Mapbox access token
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
-
-// Debug logging for token
-console.log('🗺️ Mapbox Debug Info:');
-console.log('Token available:', !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
-console.log('Token length:', process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.length || 0);
-console.log('Token starts with pk:', process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.startsWith('pk.') || false);
 
 // Travel locations data with real coordinates
 const locations = [
@@ -31,7 +25,6 @@ const locations = [
     visitDate: 'Home Base',
     memories: 'Sunrise runs in Retiro Park, discovering hidden tapas bars in La Latina, Sunday afternoons at the Prado',
     highlights: ['Retiro Park', 'La Latina', 'Malasaña', 'Prado Museum'],
-    photos: ['/images/madrid.jpg'],
   },
   {
     id: 'barcelona',
@@ -42,7 +35,6 @@ const locations = [
     visitDate: 'Multiple visits',
     memories: 'Sunrise at Bunkers del Carmel, getting lost in Gothic Quarter, beach days at Barceloneta',
     highlights: ['Sagrada Familia', 'Park Güell', 'La Barceloneta', 'Gothic Quarter'],
-    photos: ['/images/barcelona.jpg'],
   },
   {
     id: 'paris',
@@ -53,7 +45,6 @@ const locations = [
     visitDate: 'March 2024',
     memories: 'Picnic by the Seine, jazz in hidden Marais clubs, sunrise at Trocadéro',
     highlights: ['Montmartre', 'Latin Quarter', 'Musée Rodin', 'Le Marais'],
-    photos: ['/images/paris.jpg'],
   },
   {
     id: 'lisbon',
@@ -64,18 +55,6 @@ const locations = [
     visitDate: 'May 2024',
     memories: 'Tram 28 adventures, sunset at Miradouro da Senhora do Monte, getting lost in Alfama',
     highlights: ['Belém', 'Alfama', 'LX Factory', 'Sintra day trip'],
-    photos: ['/images/lisbon.jpg'],
-  },
-  {
-    id: 'london',
-    name: 'London, UK',
-    coordinates: [-0.1278, 51.5074] as [number, number],
-    type: 'visited',
-    description: 'Where I left the corporate world behind',
-    visitDate: 'Former home',
-    memories: 'The day I quit my job, last view from the office tower, first day of freedom',
-    highlights: ['Camden Market', 'Shoreditch', 'Richmond Park', 'Thames walks'],
-    photos: ['/images/london.jpg'],
   },
   {
     id: 'tokyo',
@@ -86,18 +65,6 @@ const locations = [
     visitDate: 'Spring 2025',
     memories: 'Planning to experience hanami season, dreaming of ramen and temples',
     highlights: ['Shibuya', 'Asakusa', 'Mount Fuji', 'Cherry blossoms'],
-    photos: ['/images/tokyo.jpg'],
-  },
-  {
-    id: 'malaga',
-    name: 'Málaga, Spain',
-    coordinates: [-4.4214, 36.7213] as [number, number],
-    type: 'visited',
-    description: 'Sun, sea, and Southern Spanish charm',
-    visitDate: 'Summer 2024',
-    memories: 'Beach sunsets, exploring white villages, tapas by the sea',
-    highlights: ['Alcazaba', 'Beaches', 'Picasso Museum', 'Caminito del Rey'],
-    photos: ['/images/malaga.jpg'],
   },
 ];
 
@@ -121,140 +88,81 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
   const [currentStyle, setCurrentStyle] = useState('satellite-streets-v12');
   const [is3D, setIs3D] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [showControls, setShowControls] = useState(false);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
   // Initialize map
   useEffect(() => {
-    console.log('🗺️ Map useEffect triggered');
-    console.log('Container available:', !!mapContainer.current);
-    console.log('Map already exists:', !!map.current);
-    console.log('Current style:', currentStyle);
-    console.log('View:', view);
-    console.log('is3D:', is3D);
-    
-    if (!mapContainer.current || map.current) {
-      console.log('🗺️ Early return:', !mapContainer.current ? 'no container' : 'map exists');
-      return;
-    }
+    if (!mapContainer.current || map.current) return;
 
-    try {
-      console.log('🗺️ Creating Mapbox map...');
-      // Create the map
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: `mapbox://styles/mapbox/${currentStyle}`,
-        center: view === 'home' ? [-3.7038, 40.4168] : [10, 45],
-        zoom: view === 'home' ? 8 : 4,
-        pitch: is3D ? 45 : 0,
-        bearing: 0,
-        antialias: true,
-      });
-      console.log('🗺️ Map created successfully');
-    } catch (error) {
-      console.error('🗺️ Error creating map:', error);
-      return;
-    }
+    const timer = setTimeout(() => {
+      if (!mapContainer.current || map.current) return;
 
-    const mapInstance = map.current;
-
-    mapInstance.on('load', () => {
-      // Add 3D terrain if enabled
-      if (is3D) {
-        mapInstance.addSource('mapbox-dem', {
-          type: 'raster-dem',
-          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-          tileSize: 512,
-          maxzoom: 14,
+      try {
+        console.log('🗺️ Creating Mapbox map...');
+        
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: `mapbox://styles/mapbox/satellite-streets-v12`,
+          center: [-3.7038, 40.4168],
+          zoom: view === 'home' ? 8 : 4,
+          pitch: 0,
+          bearing: 0,
+          antialias: true,
         });
-        mapInstance.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+
+        const mapInstance = map.current;
+
+        mapInstance.on('load', () => {
+          console.log('🗺️ Map loaded successfully!');
+          
+          // Add simple markers
+          locations.forEach((location) => {
+            const colors = {
+              home: '#EAB308',
+              visited: '#3B82F6',
+              upcoming: '#6B7280',
+            };
+
+            const marker = new mapboxgl.Marker({ 
+              color: colors[location.type as keyof typeof colors] || colors.visited 
+            })
+              .setLngLat(location.coordinates)
+              .setPopup(
+                new mapboxgl.Popup({ offset: 25 })
+                  .setHTML(`
+                    <div class="p-3">
+                      <h3 class="font-bold mb-1">${location.name}</h3>
+                      <p class="text-sm text-gray-600 mb-2">${location.description}</p>
+                      <span class="text-xs text-gray-500">${location.visitDate}</span>
+                    </div>
+                  `)
+              )
+              .addTo(mapInstance);
+
+            markersRef.current.push(marker);
+          });
+
+          setMapLoaded(true);
+        });
+
+        // Add basic controls
+        mapInstance.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      } catch (error) {
+        console.error('🗺️ Error creating map:', error);
       }
-
-      // Add sky layer for better 3D effect
-      mapInstance.addLayer({
-        id: 'sky',
-        type: 'sky',
-        paint: {
-          'sky-type': 'atmosphere',
-          'sky-atmosphere-sun': [0.0, 90.0],
-          'sky-atmosphere-sun-intensity': 15,
-        },
-      });
-
-      // Add markers for each location
-      locations.forEach((location) => {
-        // Create custom marker element
-        const el = document.createElement('div');
-        el.className = 'custom-marker';
-        
-        // Style based on location type
-        const colors: Record<string, string> = {
-          home: 'bg-yellow-500 border-yellow-300',
-          visited: 'bg-blue-500 border-blue-300',
-          upcoming: 'bg-gray-400 border-gray-300',
-        };
-        
-        const colorClass = colors[location.type] || colors.visited;
-
-        el.innerHTML = `
-          <div class="relative cursor-pointer transform hover:scale-110 transition-transform">
-            <div class="absolute inset-0 ${colorClass} rounded-full animate-ping opacity-75"></div>
-            <div class="relative ${colorClass} rounded-full p-2 shadow-lg border-2 border-white">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-              </svg>
-            </div>
-          </div>
-        `;
-
-        // Create marker
-        const marker = new mapboxgl.Marker({ element: el })
-          .setLngLat(location.coordinates)
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 })
-              .setHTML(`
-                <div class="p-3 max-w-xs">
-                  <h3 class="font-bold text-lg mb-1">${location.name}</h3>
-                  <p class="text-sm text-gray-600 mb-2">${location.description}</p>
-                  <div class="flex items-center gap-2 text-xs text-gray-500">
-                    <span>${location.visitDate}</span>
-                  </div>
-                </div>
-              `)
-          )
-          .addTo(mapInstance);
-
-        // Add click event
-        el.addEventListener('click', () => {
-          setSelectedLocation(location);
-        });
-
-        markersRef.current.push(marker);
-      });
-
-      setMapLoaded(true);
-    });
-
-    // Add navigation controls
-    mapInstance.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    mapInstance.addControl(new mapboxgl.ScaleControl(), 'bottom-right');
-    mapInstance.addControl(new mapboxgl.FullscreenControl(), 'top-right');
-
-    // Add geolocate control
-    mapInstance.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-        showUserHeading: true,
-      }),
-      'top-right'
-    );
+    }, 100);
 
     return () => {
-      mapInstance.remove();
+      clearTimeout(timer);
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+        setMapLoaded(false);
+      }
     };
-  }, []);
+  }, [view]);
 
   // Handle style changes
   const changeMapStyle = useCallback((styleId: string) => {
@@ -269,12 +177,8 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
     
     if (is3D) {
       map.current.setPitch(0);
-      map.current.setTerrain(null);
     } else {
       map.current.setPitch(45);
-      if (map.current.getSource('mapbox-dem')) {
-        map.current.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-      }
     }
     setIs3D(!is3D);
   }, [is3D]);
@@ -289,50 +193,29 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
       pitch: is3D ? 60 : 0,
       bearing: 20,
       duration: 3000,
-      essential: true,
     });
+    setShowControls(false);
   }, [is3D]);
-
-  // Handle view changes
-  useEffect(() => {
-    if (!map.current || !mapLoaded) return;
-
-    if (view === 'home') {
-      map.current.flyTo({
-        center: [-3.7038, 40.4168],
-        zoom: 8,
-        pitch: is3D ? 45 : 0,
-        duration: 2000,
-      });
-    } else if (view === 'journey') {
-      map.current.flyTo({
-        center: [10, 45],
-        zoom: 4,
-        pitch: is3D ? 45 : 0,
-        duration: 2000,
-      });
-    } else if (view === 'stories') {
-      map.current.flyTo({
-        center: [2, 43],
-        zoom: 5,
-        pitch: is3D ? 30 : 0,
-        duration: 2000,
-      });
-    }
-  }, [view, mapLoaded, is3D]);
 
   return (
     <>
       {/* Map Container */}
-      <div className="relative w-full h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative w-full h-[400px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl">
         <div ref={mapContainer} className="absolute inset-0" />
         
-        {/* Map Controls Overlay */}
-        <div className="absolute top-4 left-4 z-10 space-y-2">
-          {/* Style Switcher */}
+        {/* Mobile Controls Toggle */}
+        <button
+          onClick={() => setShowControls(!showControls)}
+          className="md:hidden absolute top-4 left-4 z-20 bg-card/90 backdrop-blur-sm p-3 rounded-lg shadow-lg"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Desktop Style Controls */}
+        <div className="hidden md:block absolute top-4 left-4 z-10">
           <div className="bg-card/90 backdrop-blur-sm rounded-lg shadow-lg p-2">
             <div className="flex flex-col gap-1">
-              {mapStyles.map((style) => {
+              {mapStyles.slice(0, 3).map((style) => {
                 const Icon = style.icon;
                 return (
                   <button
@@ -352,39 +235,85 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
               })}
             </div>
           </div>
-
-          {/* 3D Toggle */}
-          <button
-            onClick={toggle3D}
-            className={cn(
-              "bg-card/90 backdrop-blur-sm rounded-lg shadow-lg px-4 py-2 flex items-center gap-2",
-              "hover:bg-accent transition-colors",
-              is3D && "bg-primary text-primary-foreground"
-            )}
-          >
-            <Globe className="w-4 h-4" />
-            <span className="text-sm">{is3D ? '3D On' : '3D Off'}</span>
-          </button>
         </div>
 
-        {/* Quick Travel */}
-        <div className="absolute bottom-4 left-4 z-10">
-          <div className="bg-card/90 backdrop-blur-sm rounded-lg shadow-lg p-2">
-            <p className="text-xs font-medium mb-2 px-2">Quick Travel</p>
-            <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
-              {locations.map((location) => (
-                <button
-                  key={location.id}
-                  onClick={() => flyToLocation(location)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm text-left"
-                >
-                  <MapPin className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">{location.name}</span>
+        {/* Mobile Controls Overlay */}
+        <AnimatePresence>
+          {showControls && (
+            <motion.div
+              initial={{ opacity: 0, x: -300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -300 }}
+              className={cn(
+                "absolute inset-y-0 left-0 z-15 bg-card/95 backdrop-blur-sm",
+                "w-72 overflow-y-auto"
+              )}
+            >
+              {/* Mobile header */}
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <h3 className="font-semibold">Map Controls</h3>
+                <button onClick={() => setShowControls(false)}>
+                  <X className="w-5 h-5" />
                 </button>
-              ))}
-            </div>
-          </div>
-        </div>
+              </div>
+
+              <div className="p-4 space-y-4">
+                {/* Style Controls */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Map Style</h4>
+                  {mapStyles.map((style) => {
+                    const Icon = style.icon;
+                    return (
+                      <button
+                        key={style.id}
+                        onClick={() => changeMapStyle(style.id)}
+                        className={cn(
+                          "w-full flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-sm",
+                          currentStyle === style.id
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-accent hover:text-accent-foreground"
+                        )}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span>{style.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 3D Toggle */}
+                <button
+                  onClick={toggle3D}
+                  className={cn(
+                    "w-full bg-card/90 backdrop-blur-sm rounded-lg shadow-lg px-4 py-2 flex items-center gap-2",
+                    "hover:bg-accent transition-colors",
+                    is3D && "bg-primary text-primary-foreground"
+                  )}
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="text-sm">{is3D ? '3D On' : '3D Off'}</span>
+                </button>
+
+                {/* Quick Travel */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Quick Travel</h4>
+                  <div className="space-y-1">
+                    {locations.map((location) => (
+                      <button
+                        key={location.id}
+                        onClick={() => flyToLocation(location)}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm text-left"
+                      >
+                        <MapPin className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate">{location.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Loading indicator */}
         {!mapLoaded && (

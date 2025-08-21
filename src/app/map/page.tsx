@@ -56,41 +56,44 @@ export default function MapPage() {
         </motion.div>
 
         {/* View Controls */}
-        <div className="flex justify-center gap-4 mb-6">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
           <button
             onClick={() => setSelectedView('journey')}
-            className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
+            className={`px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 transition-all text-sm md:text-base ${
               selectedView === 'journey' 
                 ? 'bg-primary text-primary-foreground shadow-lg' 
                 : 'bg-card text-muted-foreground hover:shadow-md'
             }`}
           >
-            <Plane className="w-5 h-5" />
-            Journey View
+            <Plane className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden sm:inline">Journey View</span>
+            <span className="sm:hidden">Journey</span>
           </button>
           
           <button
             onClick={() => setSelectedView('stories')}
-            className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
+            className={`px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 transition-all text-sm md:text-base ${
               selectedView === 'stories' 
                 ? 'bg-accent text-accent-foreground shadow-lg' 
                 : 'bg-card text-muted-foreground hover:shadow-md'
             }`}
           >
-            <Camera className="w-5 h-5" />
-            Story Mode
+            <Camera className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden sm:inline">Story Mode</span>
+            <span className="sm:hidden">Stories</span>
           </button>
           
           <button
             onClick={() => setSelectedView('home')}
-            className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
+            className={`px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 transition-all text-sm md:text-base ${
               selectedView === 'home' 
                 ? 'bg-primary text-primary-foreground shadow-lg' 
                 : 'bg-card text-muted-foreground hover:shadow-md'
             }`}
           >
-            <Home className="w-5 h-5" />
-            Mi Casa
+            <Home className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden sm:inline">Mi Casa</span>
+            <span className="sm:hidden">Home</span>
           </button>
         </div>
 
@@ -116,7 +119,7 @@ export default function MapPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 mb-8"
             >
               {Object.entries(stats).map(([key, value], index) => (
                 <motion.div
@@ -124,12 +127,12 @@ export default function MapPage() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-card rounded-xl p-4 text-center shadow-md dark:shadow-xl"
+                  className="bg-card rounded-xl p-3 md:p-4 text-center shadow-md dark:shadow-xl"
                 >
-                  <div className="text-3xl font-bold text-primary">
+                  <div className="text-2xl md:text-3xl font-bold text-primary">
                     {value.toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground capitalize">
+                  <div className="text-xs md:text-sm text-muted-foreground capitalize">
                     {key}
                   </div>
                 </motion.div>
