@@ -68,13 +68,14 @@ const locations = [
   },
 ];
 
-// Map styles available
+// Map styles available - Updated for Mapbox GL JS v3
 const mapStyles = [
-  { id: 'satellite-streets-v12', name: 'Satellite', icon: Camera },
-  { id: 'outdoors-v12', name: 'Terrain', icon: Mountain },
-  { id: 'streets-v12', name: 'Streets', icon: MapPin },
-  { id: 'dark-v11', name: 'Dark', icon: Moon },
-  { id: 'light-v11', name: 'Light', icon: Sun },
+  { id: 'mapbox://styles/mapbox/standard', name: 'Standard', icon: Globe },
+  { id: 'mapbox://styles/mapbox/satellite-streets-v12', name: 'Satellite', icon: Camera },
+  { id: 'mapbox://styles/mapbox/outdoors-v12', name: 'Terrain', icon: Mountain },
+  { id: 'mapbox://styles/mapbox/streets-v12', name: 'Streets', icon: MapPin },
+  { id: 'mapbox://styles/mapbox/dark-v11', name: 'Dark', icon: Moon },
+  { id: 'mapbox://styles/mapbox/light-v11', name: 'Light', icon: Sun },
 ];
 
 interface MapboxTravelMapProps {
@@ -85,10 +86,11 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<typeof locations[0] | null>(null);
-  const [currentStyle, setCurrentStyle] = useState('satellite-streets-v12');
+  const [currentStyle, setCurrentStyle] = useState('mapbox://styles/mapbox/standard');
   const [is3D, setIs3D] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [terrainEnabled, setTerrainEnabled] = useState(false);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
   // Initialize map
@@ -99,48 +101,124 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
       if (!mapContainer.current || map.current) return;
 
       try {
-        console.log('🗺️ Creating Mapbox map...');
+        console.log('🗺️ Creating Mapbox GL JS v3 map...');
         
+        // Enhanced v3 initialization with optimizations
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: `mapbox://styles/mapbox/satellite-streets-v12`,
+          style: currentStyle,
           center: [-3.7038, 40.4168],
           zoom: view === 'home' ? 8 : 4,
-          pitch: 0,
+          pitch: is3D ? 45 : 0,
           bearing: 0,
           antialias: true,
+          // v3 optimizations
+          maxPitch: 85, // v3 default increased to 85°
+          projection: 'globe' as any, // Enable globe projection
         });
 
         const mapInstance = map.current;
 
+        // Enhanced v3 error handling
+        mapInstance.on('error', (e: any) => {
+          console.error('🗺️ Mapbox v3 error:', e.error);
+          if (e.error?.message?.includes('token')) {
+            console.error('🗺️ Token error - check NEXT_PUBLIC_MAPBOX_TOKEN');
+          }
+        });
+
+        mapInstance.on('styleerror', (e: any) => {
+          console.error('🗺️ Mapbox v3 style error:', e.error);
+        });
+
+        mapInstance.on('webglcontextlost', () => {
+          console.warn('🗺️ WebGL context lost - attempting recovery');
+        });
+
         mapInstance.on('load', () => {
-          console.log('🗺️ Map loaded successfully!');
+          console.log('🗺️ Mapbox v3 map loaded successfully!');
           
-          // Add simple markers
+          // Add v3 enhanced 3D terrain if enabled
+          if (terrainEnabled) {
+            console.log('🗺️ Adding v3 enhanced terrain...');
+            try {
+              mapInstance.addSource('mapbox-dem', {
+                type: 'raster-dem',
+                url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                tileSize: 512,
+                maxzoom: 14
+              });
+              
+              mapInstance.setTerrain({ 
+                source: 'mapbox-dem', 
+                exaggeration: 1.5 
+              });
+
+              // v3 enhanced sky layer with better atmosphere
+              mapInstance.addLayer({
+                id: 'sky',
+                type: 'sky',
+                paint: {
+                  'sky-type': 'atmosphere',
+                  'sky-atmosphere-sun': [0.0, 90.0],
+                  'sky-atmosphere-sun-intensity': 15,
+                  'sky-gradient-center': [0, 0],
+                  'sky-gradient-radius': 90,
+                }
+              }, 'bottom'); // Use v3 slot system
+            } catch (error) {
+              console.warn('🗺️ Terrain not available for this style:', error);
+            }
+          }
+
+          // Enhanced markers with v3 optimizations
           locations.forEach((location) => {
             const colors = {
               home: '#EAB308',
-              visited: '#3B82F6',
+              visited: '#3B82F6', 
               upcoming: '#6B7280',
             };
 
             const marker = new mapboxgl.Marker({ 
-              color: colors[location.type as keyof typeof colors] || colors.visited 
+              color: colors[location.type as keyof typeof colors] || colors.visited,
+              scale: 1.2, // Slightly larger for better visibility
             })
               .setLngLat(location.coordinates)
               .setPopup(
-                new mapboxgl.Popup({ offset: 25 })
+                new mapboxgl.Popup({ 
+                  offset: 25,
+                  closeButton: true,
+                  closeOnClick: false,
+                  maxWidth: '400px'
+                })
                   .setHTML(`
-                    <div class="p-3">
-                      <h3 class="font-bold mb-1">${location.name}</h3>
+                    <div class="p-4">
+                      <h3 class="font-bold text-lg mb-2">${location.name}</h3>
                       <p class="text-sm text-gray-600 mb-2">${location.description}</p>
-                      <span class="text-xs text-gray-500">${location.visitDate}</span>
+                      <div class="flex items-center gap-2 text-xs text-gray-500">
+                        <span>📅 ${location.visitDate}</span>
+                      </div>
+                      <button 
+                        onclick="window.dispatchEvent(new CustomEvent('mapbox-location-click', { detail: '${location.id}' }))"
+                        class="mt-3 w-full bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors"
+                      >
+                        View Details
+                      </button>
                     </div>
                   `)
               )
               .addTo(mapInstance);
 
             markersRef.current.push(marker);
+          });
+
+          // Listen for custom location click events
+          window.addEventListener('mapbox-location-click', (e: any) => {
+            const locationId = e.detail;
+            const location = locations.find(loc => loc.id === locationId);
+            if (location) {
+              setSelectedLocation(location);
+            }
           });
 
           setMapLoaded(true);
@@ -164,24 +242,76 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
     };
   }, [view]);
 
-  // Handle style changes
+  // Handle style changes - Updated for v3
   const changeMapStyle = useCallback((styleId: string) => {
     if (!map.current) return;
-    map.current.setStyle(`mapbox://styles/mapbox/${styleId}`);
+    console.log('🗺️ Changing to style:', styleId);
+    map.current.setStyle(styleId);
     setCurrentStyle(styleId);
   }, []);
 
-  // Toggle 3D terrain
+  // Toggle 3D view - Enhanced for v3
   const toggle3D = useCallback(() => {
     if (!map.current) return;
     
-    if (is3D) {
-      map.current.setPitch(0);
-    } else {
-      map.current.setPitch(45);
-    }
+    const newPitch = is3D ? 0 : 60; // Use higher pitch for better 3D effect
+    map.current.easeTo({
+      pitch: newPitch,
+      duration: 1000
+    });
     setIs3D(!is3D);
   }, [is3D]);
+
+  // Toggle v3 terrain
+  const toggleTerrain = useCallback(() => {
+    if (!map.current) return;
+    
+    if (terrainEnabled) {
+      console.log('🗺️ Disabling v3 terrain...');
+      map.current.setTerrain(null);
+      if (map.current.getLayer('sky')) {
+        map.current.removeLayer('sky');
+      }
+      if (map.current.getSource('mapbox-dem')) {
+        map.current.removeSource('mapbox-dem');
+      }
+    } else {
+      console.log('🗺️ Enabling v3 terrain...');
+      try {
+        if (!map.current.getSource('mapbox-dem')) {
+          map.current.addSource('mapbox-dem', {
+            type: 'raster-dem',
+            url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            tileSize: 512,
+            maxzoom: 14
+          });
+        }
+        
+        map.current.setTerrain({ 
+          source: 'mapbox-dem', 
+          exaggeration: 1.5 
+        });
+
+        if (!map.current.getLayer('sky')) {
+          map.current.addLayer({
+            id: 'sky',
+            type: 'sky',
+            paint: {
+              'sky-type': 'atmosphere',
+              'sky-atmosphere-sun': [0.0, 90.0],
+              'sky-atmosphere-sun-intensity': 15,
+              'sky-gradient-center': [0, 0],
+              'sky-gradient-radius': 90,
+            }
+          });
+        }
+      } catch (error) {
+        console.warn('🗺️ Could not enable terrain:', error);
+        return;
+      }
+    }
+    setTerrainEnabled(!terrainEnabled);
+  }, [terrainEnabled]);
 
   // Fly to location
   const flyToLocation = useCallback((location: typeof locations[0]) => {
@@ -211,11 +341,11 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Desktop Style Controls */}
+        {/* Desktop Style Controls - Enhanced for v3 */}
         <div className="hidden md:block absolute top-4 left-4 z-10">
           <div className="bg-card/90 backdrop-blur-sm rounded-lg shadow-lg p-2">
             <div className="flex flex-col gap-1">
-              {mapStyles.slice(0, 3).map((style) => {
+              {mapStyles.slice(0, 4).map((style) => {
                 const Icon = style.icon;
                 return (
                   <button
@@ -292,6 +422,19 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
                 >
                   <Globe className="w-4 h-4" />
                   <span className="text-sm">{is3D ? '3D On' : '3D Off'}</span>
+                </button>
+
+                {/* v3 Terrain Toggle */}
+                <button
+                  onClick={toggleTerrain}
+                  className={cn(
+                    "w-full bg-card/90 backdrop-blur-sm rounded-lg shadow-lg px-4 py-2 flex items-center gap-2",
+                    "hover:bg-accent transition-colors",
+                    terrainEnabled && "bg-primary text-primary-foreground"
+                  )}
+                >
+                  <Mountain className="w-4 h-4" />
+                  <span className="text-sm">{terrainEnabled ? 'Terrain On' : 'Terrain Off'}</span>
                 </button>
 
                 {/* Quick Travel */}
