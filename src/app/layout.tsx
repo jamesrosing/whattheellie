@@ -36,8 +36,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Adobe Typekit for Garamond Premier Pro */}
-        <link rel="stylesheet" href="https://use.typekit.net/hzy3gvm.css" />
+        {/* Adobe Typekit for Garamond Premier Pro - Disabled due to 404 
+            To enable: Replace with your Adobe Fonts project ID
+            <link rel="stylesheet" href="https://use.typekit.net/YOUR_PROJECT_ID.css" />
+        */}
       </head>
       <body
         className={cn(

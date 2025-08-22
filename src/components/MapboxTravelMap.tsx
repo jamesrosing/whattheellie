@@ -92,10 +92,13 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
   const [showControls, setShowControls] = useState(false);
   const [terrainEnabled, setTerrainEnabled] = useState(false);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const initializingRef = useRef(false); // Prevent double initialization
 
   // Initialize map
   useEffect(() => {
-    if (!mapContainer.current || map.current) return;
+    if (!mapContainer.current || map.current || initializingRef.current) return;
+    
+    initializingRef.current = true; // Mark as initializing
 
     const timer = setTimeout(() => {
       if (!mapContainer.current || map.current) return;
@@ -181,7 +184,7 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
 
             const marker = new mapboxgl.Marker({ 
               color: colors[location.type as keyof typeof colors] || colors.visited,
-              scale: 1.2, // Slightly larger for better visibility
+              scale: 1.1,
             })
               .setLngLat(location.coordinates)
               .setPopup(
@@ -189,36 +192,22 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
                   offset: 25,
                   closeButton: true,
                   closeOnClick: false,
-                  maxWidth: '400px'
+                  maxWidth: '300px'
                 })
                   .setHTML(`
-                    <div class="p-4">
+                    <div class="p-3">
                       <h3 class="font-bold text-lg mb-2">${location.name}</h3>
                       <p class="text-sm text-gray-600 mb-2">${location.description}</p>
                       <div class="flex items-center gap-2 text-xs text-gray-500">
                         <span>📅 ${location.visitDate}</span>
                       </div>
-                      <button 
-                        onclick="window.dispatchEvent(new CustomEvent('mapbox-location-click', { detail: '${location.id}' }))"
-                        class="mt-3 w-full bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors"
-                      >
-                        View Details
-                      </button>
                     </div>
                   `)
               )
               .addTo(mapInstance);
 
+            // Store marker reference
             markersRef.current.push(marker);
-          });
-
-          // Listen for custom location click events
-          window.addEventListener('mapbox-location-click', (e: any) => {
-            const locationId = e.detail;
-            const location = locations.find(loc => loc.id === locationId);
-            if (location) {
-              setSelectedLocation(location);
-            }
           });
 
           setMapLoaded(true);
@@ -239,8 +228,9 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
         map.current = null;
         setMapLoaded(false);
       }
+      initializingRef.current = false; // Reset initialization flag
     };
-  }, [view]);
+  }, []);
 
   // Handle style changes - Updated for v3
   const changeMapStyle = useCallback((styleId: string) => {
