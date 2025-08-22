@@ -70,12 +70,12 @@ const locations = [
 
 // Map styles available - Updated for Mapbox GL JS v3
 const mapStyles = [
-  { id: 'mapbox://styles/mapbox/standard', name: 'Standard', icon: Globe },
-  { id: 'mapbox://styles/mapbox/satellite-streets-v12', name: 'Satellite', icon: Camera },
-  { id: 'mapbox://styles/mapbox/outdoors-v12', name: 'Terrain', icon: Mountain },
-  { id: 'mapbox://styles/mapbox/streets-v12', name: 'Streets', icon: MapPin },
-  { id: 'mapbox://styles/mapbox/dark-v11', name: 'Dark', icon: Moon },
-  { id: 'mapbox://styles/mapbox/light-v11', name: 'Light', icon: Sun },
+  { id: 'standard', name: 'Standard', icon: Globe },
+  { id: 'satellite-streets-v12', name: 'Satellite', icon: Camera },
+  { id: 'outdoors-v12', name: 'Terrain', icon: Mountain },
+  { id: 'streets-v12', name: 'Streets', icon: MapPin },
+  { id: 'dark-v11', name: 'Dark', icon: Moon },
+  { id: 'light-v11', name: 'Light', icon: Sun },
 ];
 
 interface MapboxTravelMapProps {
@@ -86,8 +86,8 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<typeof locations[0] | null>(null);
-  const [currentStyle, setCurrentStyle] = useState('mapbox://styles/mapbox/standard');
-  const [is3D, setIs3D] = useState(true);
+  const [currentStyle, setCurrentStyle] = useState('streets-v12');
+  const [is3D, setIs3D] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [terrainEnabled, setTerrainEnabled] = useState(false);
@@ -105,19 +105,24 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
 
       try {
         console.log('🗺️ Creating Mapbox GL JS v3 map...');
+        console.log('🗺️ Container element:', mapContainer.current);
+        console.log('🗺️ Container dimensions:', {
+          width: mapContainer.current.offsetWidth,
+          height: mapContainer.current.offsetHeight,
+        });
+        console.log('🗺️ Using style:', `mapbox://styles/mapbox/${currentStyle}`);
+        console.log('🗺️ Token:', mapboxgl.accessToken ? 'Set' : 'Not set');
         
         // Enhanced v3 initialization with optimizations
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: currentStyle,
-          center: [-3.7038, 40.4168],
+          style: `mapbox://styles/mapbox/${currentStyle}`, // Use correct style format
+          center: [-3.7038, 40.4168], // Madrid
           zoom: view === 'home' ? 8 : 4,
-          pitch: is3D ? 45 : 0,
+          pitch: 0, // Start flat for better initial load
           bearing: 0,
           antialias: true,
-          // v3 optimizations
           maxPitch: 85, // v3 default increased to 85°
-          projection: 'globe' as any, // Enable globe projection
         });
 
         const mapInstance = map.current;
@@ -236,7 +241,7 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
   const changeMapStyle = useCallback((styleId: string) => {
     if (!map.current) return;
     console.log('🗺️ Changing to style:', styleId);
-    map.current.setStyle(styleId);
+    map.current.setStyle(`mapbox://styles/mapbox/${styleId}`);
     setCurrentStyle(styleId);
   }, []);
 
@@ -321,7 +326,12 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
     <>
       {/* Map Container */}
       <div className="relative w-full h-[400px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl">
-        <div ref={mapContainer} className="absolute inset-0" />
+        <div 
+          ref={mapContainer} 
+          id="mapbox-container"
+          className="absolute inset-0"
+          style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        />
         
         {/* Mobile Controls Toggle */}
         <button
@@ -360,15 +370,25 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
         {/* Mobile Controls Overlay */}
         <AnimatePresence>
           {showControls && (
-            <motion.div
-              initial={{ opacity: 0, x: -300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -300 }}
-              className={cn(
-                "absolute inset-y-0 left-0 z-15 bg-card/95 backdrop-blur-sm",
-                "w-72 overflow-y-auto"
-              )}
-            >
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="md:hidden absolute inset-0 bg-black/50 z-30"
+                onClick={() => setShowControls(false)}
+              />
+              {/* Sidebar */}
+              <motion.div
+                initial={{ x: -300 }}
+                animate={{ x: 0 }}
+                exit={{ x: -300 }}
+                className={cn(
+                  "absolute top-0 left-0 bottom-0 z-40 bg-card/95 backdrop-blur-sm",
+                  "w-72 overflow-y-auto shadow-2xl md:hidden"
+                )}
+              >
               {/* Mobile header */}
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <h3 className="font-semibold">Map Controls</h3>
@@ -445,6 +465,7 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
                 </div>
               </div>
             </motion.div>
+            </>
           )}
         </AnimatePresence>
 

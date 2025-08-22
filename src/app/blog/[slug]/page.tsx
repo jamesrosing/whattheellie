@@ -1,7 +1,7 @@
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { CommentSection } from "@/components/CommentSection";
 import { Footer } from "@/components/Footer";
-import { EnhancedHeader } from "@/components/EnhancedHeader";
+import { Header } from "@/components/Header";
 import { RelatedPosts } from "@/components/RelatedPosts";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
@@ -84,7 +84,7 @@ const Page = async (props: { params: Promise<Params> }) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="container mx-auto px-5">
-        <EnhancedHeader />
+        <Header />
         <div className="max-w-prose mx-auto text-xl">
           <BlogPostContent post={postResult.post} />
           <RelatedPosts posts={relatedPosts} />

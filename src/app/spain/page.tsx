@@ -1,12 +1,12 @@
 import { Footer } from "@/components/Footer";
-import { EnhancedHeader } from "@/components/EnhancedHeader";
+import { Header } from "@/components/Header";
 import SpainPageClient from "./SpainPageClient";
 
 export default function SpainGuidePage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-5">
-        <EnhancedHeader />
+        <Header />
       </div>
       <SpainPageClient />
       <div className="container mx-auto px-5">

@@ -1,5 +1,5 @@
 import { Footer } from "@/components/Footer";
-import { EnhancedHeader } from "@/components/EnhancedHeader";
+import { Header } from "@/components/Header";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { wisp } from "@/lib/wisp";
@@ -27,7 +27,7 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto px-5">
-      <EnhancedHeader />
+      <Header />
       <div className="mt-20 mb-12 text-center">
         <h1 className="mb-2 text-5xl font-bold">Tags</h1>
         <p className="text-lg opacity-50">List of all tags</p>

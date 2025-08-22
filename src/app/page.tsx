@@ -1,6 +1,6 @@
 import { BlogPostsPreview } from "@/components/BlogPostPreview";
 import { Footer } from "@/components/Footer";
-import { EnhancedHeader } from "@/components/EnhancedHeader";
+import { Header } from "@/components/Header";
 import { wisp } from "@/lib/wisp";
 import { Metadata } from "next";
 import { config } from "@/config";
@@ -35,7 +35,7 @@ const Page = async ({ searchParams }: PageProps) => {
     
     return (
       <div className="container mx-auto px-5 mb-10">
-        <EnhancedHeader />
+        <Header />
         <BlogPostsPreview posts={result.posts} />
         <Footer />
       </div>
@@ -44,7 +44,7 @@ const Page = async ({ searchParams }: PageProps) => {
     console.error("Error fetching posts:", error);
     return (
       <div className="container mx-auto px-5 mb-10">
-        <EnhancedHeader />
+        <Header />
         <div className="text-center py-10">
           <h2 className="text-2xl font-display font-medium">Unable to load posts</h2>
           <p className="text-muted-foreground mt-2">Please try again later.</p>

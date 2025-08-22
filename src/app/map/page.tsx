@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Footer } from "@/components/Footer";
-import { EnhancedHeader } from "@/components/EnhancedHeader";
+import { Header } from "@/components/Header";
 import { Plane, Home, Camera, Calendar, MapPin, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -39,7 +39,7 @@ export default function MapPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-5">
-        <EnhancedHeader />
+        <Header />
         
         {/* Page Title with Animation */}
         <motion.div 
