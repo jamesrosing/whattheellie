@@ -235,6 +235,7 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
       }
       initializingRef.current = false; // Reset initialization flag
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle style changes - Updated for v3
