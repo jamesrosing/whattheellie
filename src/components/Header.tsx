@@ -39,7 +39,7 @@ export const Navigation: FunctionComponent = () => {
             key={item.href}
             href={item.href}
             className={cn(
-              "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+              "nav-text px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
               "hover:bg-accent hover:text-accent-foreground hover:scale-105",
               pathname === item.href 
                 ? "bg-accent/50 text-accent-foreground font-semibold" 
@@ -84,7 +84,7 @@ export const Navigation: FunctionComponent = () => {
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "flex items-center justify-center px-4 py-3 rounded-xl",
+                      "nav-text flex items-center justify-center px-4 py-3 rounded-xl",
                       "text-lg font-medium transition-all duration-300",
                       "hover:bg-accent hover:shadow-md",
                       "animate-fade-in-up",

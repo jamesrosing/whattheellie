@@ -106,9 +106,11 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         cerebri: ["'Cerebri Sans'", ...fontFamily.sans],
-        garamond: ["'garamond-premier-pro-subhead'", ...fontFamily.serif],
-        display: ["'garamond-premier-pro-subhead'", ...fontFamily.serif],
+        garamond: ["'garamond-premier-pro-caption'", ...fontFamily.serif],
+        lorimer: ["'lorimer-no-2'", ...fontFamily.sans],
+        display: ["'garamond-premier-pro-caption'", ...fontFamily.serif],
         body: ["'Cerebri Sans'", ...fontFamily.sans],
+        nav: ["'lorimer-no-2'", ...fontFamily.sans],
       },
     },
   },

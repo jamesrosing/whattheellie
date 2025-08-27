@@ -4,11 +4,18 @@ import { Rss } from "lucide-react";
 import Link from "next/link";
 import { FunctionComponent } from "react";
 import { DarkModeToggle } from "./DarkModeToggle";
+import { NewsletterSubscribe } from "./NewsletterSubscribe";
 import { Button } from "./ui/button";
 
 export const Footer: FunctionComponent = () => {
   return (
     <section className="mt-8 md:mt-16 mb-12">
+      <div className="border-t pt-8 mb-8">
+        <div className="max-w-md">
+          <h4 className="text-sm font-medium text-foreground mb-3">Stay updated</h4>
+          <NewsletterSubscribe variant="inline" />
+        </div>
+      </div>
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">
           © {config.blog.copyright} {new Date().getFullYear()}

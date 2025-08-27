@@ -29,19 +29,19 @@ export const BlogPostPreview: FunctionComponent<{
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </Link>
-      <div className="grid grid-cols-1 gap-3 md:col-span-2 mt-4">
-        <h2 className="text-h2 text-primary transition-colors duration-200 group-hover:text-primary/80">
+      <div className="grid grid-cols-1 gap-2 md:col-span-2 mt-4">
+        <h2 className="font-garamond text-2xl md:text-3xl text-primary transition-colors duration-200 group-hover:text-primary/80">
           <Link href={`/blog/${post.slug}`} className="hover:underline decoration-2 underline-offset-4">
             {post.title}
           </Link>
         </h2>
-        <div className="caption italic text-muted-foreground">
+        <div className="caption italic text-muted-foreground -mt-1">
           {formatDate(post.publishedAt || post.updatedAt, "dd MMMM yyyy")}
         </div>
-        <div className="text-body leading-relaxed md:text-lg line-clamp-4 text-muted-foreground">
+        <div className="text-sm md:text-base leading-relaxed line-clamp-4 text-muted-foreground mt-2">
           {post.description}
         </div>
-        <div className="text-sm text-muted-foreground flex flex-wrap gap-2">
+        <div className="text-sm text-muted-foreground flex flex-wrap gap-2 justify-end mt-3">
           {post.tags.map((tag) => (
             <Link 
               key={tag.id} 

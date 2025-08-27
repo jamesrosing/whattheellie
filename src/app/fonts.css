@@ -1,9 +1,14 @@
 /* Font System - Unified Typography Configuration */
 
-/* Primary Font: Garamond Premier Pro (Adobe Typekit) */
-/* This font is loaded via Adobe Typekit in layout.tsx */
-.tk-garamond-subhead {
-  font-family: "garamond-premier-pro-subhead", serif;
+/* Primary Font: Garamond Premier Pro (Adobe Fonts) */
+/* Secondary Font: Lorimer No 2 (Adobe Fonts) */
+/* These fonts are loaded via Adobe Fonts in layout.tsx */
+.tk-garamond-premier-pro {
+  font-family: "garamond-premier-pro", serif;
+}
+
+.tk-lorimer-no-2 {
+  font-family: "lorimer-no-2", sans-serif;
 }
 
 /* Secondary Font: Cerebri Sans (Local) */
@@ -47,15 +52,16 @@
 
 /* Typography System */
 .hero-text {
-  font-family: "garamond-premier-pro-subhead", serif;
-  font-weight: var(--font-medium);
+  font-family: "garamond-premier-pro-caption", serif;
+  font-weight: 400;
   font-style: normal;
-  font-size: clamp(3rem, 6vw, 5rem);
-  line-height: 1;
+  font-size: clamp(2rem, 5vw, 3rem);  /* 32px min, scales with viewport, 48px max */
+  line-height: 0.9;
   letter-spacing: -0.02em;
   font-display: swap;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-transform: lowercase;
 }
 
 .hero-tagline {
@@ -68,13 +74,13 @@
 
 /* Display & Heading Styles */
 .display-heading {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-weight: var(--font-regular);
   letter-spacing: -0.02em;
 }
 
 .primary-heading {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-weight: var(--font-regular);
 }
 
@@ -84,32 +90,32 @@
 }
 
 .caption {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-weight: var(--font-regular);
   font-size: 0.875rem;
 }
 
 /* Responsive Typography Scale */
 .text-display {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 1.1;
 }
 
 .text-h1 {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.2;
 }
 
 .text-h2 {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   line-height: 1.3;
 }
 
 .text-h3 {
-  font-family: "garamond-premier-pro-subhead", serif;
+  font-family: "garamond-premier-pro", serif;
   font-size: clamp(1.25rem, 2vw, 1.75rem);
   line-height: 1.4;
 }
@@ -124,4 +130,14 @@
   font-family: "Cerebri Sans", sans-serif;
   font-size: 0.875rem;
   line-height: 1.4;
+}
+
+/* Navigation Text */
+.nav-text {
+  font-family: "lorimer-no-2", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

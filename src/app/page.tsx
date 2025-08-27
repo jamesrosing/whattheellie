@@ -1,6 +1,7 @@
 import { BlogPostsPreview } from "@/components/BlogPostPreview";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { NewsletterSubscribe } from "@/components/NewsletterSubscribe";
 import { wisp } from "@/lib/wisp";
 import { Metadata } from "next";
 import { config } from "@/config";

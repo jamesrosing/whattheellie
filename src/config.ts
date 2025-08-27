@@ -26,7 +26,7 @@ const buildConfig = (): BlogConfig => {
     );
   }
 
-  const name = process.env.NEXT_PUBLIC_BLOG_DISPLAY_NAME || "whattheellie";
+  const name = process.env.NEXT_PUBLIC_BLOG_DISPLAY_NAME || "ellie";
   const copyright = process.env.NEXT_PUBLIC_BLOG_COPYRIGHT || "Ellie";
   const defaultTitle =
     process.env.NEXT_DEFAULT_METADATA_DEFAULT_TITLE || "What The Ellie - Travel & Adventure Blog";
