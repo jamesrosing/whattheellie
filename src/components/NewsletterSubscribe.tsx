@@ -72,37 +72,45 @@ export function NewsletterSubscribe({ variant = "inline", className }: Newslette
     return (
       <div className={cn("w-full", className)}>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <div className="flex gap-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex-1 space-y-0">
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        {...field}
+                        disabled={status === "loading"}
+                        className="h-10"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button 
+                type="submit" 
+                disabled={status === "loading"}
+                size="sm"
+                className="h-10"
+              >
+                {status === "loading" ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Subscribe"
+                )}
+              </Button>
+            </div>
             <FormField
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      {...field}
-                      disabled={status === "loading"}
-                      className="h-10"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              render={() => (
+                <FormMessage />
               )}
             />
-            <Button 
-              type="submit" 
-              disabled={status === "loading"}
-              size="sm"
-              className="h-10"
-            >
-              {status === "loading" ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                "Subscribe"
-              )}
-            </Button>
           </form>
         </Form>
         <AnimatePresence>
