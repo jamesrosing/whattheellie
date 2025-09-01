@@ -7,12 +7,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
+import { NewsletterSubscribe } from "@/components/NewsletterSubscribe";
 import { config } from "@/config";
 import { cn } from "@/lib/utils";
-import { Menu } from "lucide-react";
+import { Menu, Mail } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FunctionComponent, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 interface MenuItem {
   name: string;
@@ -49,7 +56,24 @@ export const Navigation: FunctionComponent = () => {
             {item.name}
           </Link>
         ))}
-        <div className="ml-4">
+        <div className="ml-4 flex items-center space-x-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Mail className="h-4 w-4" />
+                Subscribe
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80" align="end">
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm">Stay updated</h4>
+                <p className="text-sm text-muted-foreground">
+                  Get notified when new travel stories are published.
+                </p>
+                <NewsletterSubscribe variant="inline" />
+              </div>
+            </PopoverContent>
+          </Popover>
           <DarkModeToggle />
         </div>
       </div>
@@ -102,6 +126,20 @@ export const Navigation: FunctionComponent = () => {
                 );
               })}
             </nav>
+
+            {/* Newsletter Subscribe Section */}
+            <div className="mt-8 px-2">
+              <div className="border rounded-xl p-4 bg-accent/10">
+                <div className="flex items-center gap-2 mb-3">
+                  <Mail className="h-5 w-5 text-primary" />
+                  <h3 className="font-medium text-sm">Stay Updated</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Get notified when new travel stories are published.
+                </p>
+                <NewsletterSubscribe variant="inline" />
+              </div>
+            </div>
 
             {/* Mobile Menu Footer */}
             <div className="absolute bottom-8 left-0 right-0 px-6">

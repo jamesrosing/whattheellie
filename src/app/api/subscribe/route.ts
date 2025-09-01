@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { emailService } from "@/lib/email";
 import crypto from "crypto";
 
-// In production, you'd want to use a proper database like PostgreSQL, MongoDB, or Supabase
-// For now, we'll use a JSON file to store subscribers
-const SUBSCRIBERS_FILE = path.join(process.cwd(), "data", "subscribers.json");
+// In production, you should use a proper database like PostgreSQL, MongoDB, or Supabase
+// For now, we'll use email notifications and in-memory storage
 
 interface Subscriber {
   id: string;
@@ -15,31 +13,9 @@ interface Subscriber {
   token: string;
 }
 
-async function ensureDataFile(): Promise<void> {
-  try {
-    await fs.access(SUBSCRIBERS_FILE);
-  } catch {
-    // Create directory and file if they don't exist
-    const dir = path.dirname(SUBSCRIBERS_FILE);
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify({ subscribers: [] }));
-  }
-}
-
-async function getSubscribers(): Promise<Subscriber[]> {
-  await ensureDataFile();
-  const data = await fs.readFile(SUBSCRIBERS_FILE, "utf-8");
-  const parsed = JSON.parse(data);
-  return parsed.subscribers || [];
-}
-
-async function saveSubscribers(subscribers: Subscriber[]): Promise<void> {
-  await ensureDataFile();
-  await fs.writeFile(
-    SUBSCRIBERS_FILE,
-    JSON.stringify({ subscribers }, null, 2)
-  );
-}
+// In-memory storage for development/demo purposes
+// In production, this should be replaced with a database
+const subscribers = new Map<string, Subscriber>();
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,15 +30,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get existing subscribers
-    const subscribers = await getSubscribers();
+    const normalizedEmail = email.toLowerCase();
 
     // Check if already subscribed
-    const existingSubscriber = subscribers.find(
-      (sub) => sub.email.toLowerCase() === email.toLowerCase()
-    );
-
-    if (existingSubscriber) {
+    if (subscribers.has(normalizedEmail)) {
       return NextResponse.json(
         { message: "You're already subscribed! Thank you for your interest." },
         { status: 200 }
@@ -72,24 +43,61 @@ export async function POST(request: NextRequest) {
     // Create new subscriber
     const newSubscriber: Subscriber = {
       id: crypto.randomUUID(),
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       subscribedAt: new Date().toISOString(),
       verified: false,
       token: crypto.randomBytes(32).toString("hex"),
     };
 
-    // Add to list and save
-    subscribers.push(newSubscriber);
-    await saveSubscribers(subscribers);
+    // Store in memory (in production, use a database)
+    subscribers.set(normalizedEmail, newSubscriber);
 
-    // In production, you would:
-    // 1. Send a verification email
-    // 2. Store in a proper database
-    // 3. Integrate with email service (SendGrid, Mailgun, etc.)
+    // Send notification email to admin/owner
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || process.env.RESEND_FROM_EMAIL;
+    
+    if (adminEmail) {
+      await emailService.sendEmail({
+        to: adminEmail,
+        subject: "New Newsletter Subscriber",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333;">New Newsletter Subscriber!</h2>
+            <p>A new subscriber has joined your newsletter:</p>
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <p style="margin: 5px 0;"><strong>Email:</strong> ${normalizedEmail}</p>
+              <p style="margin: 5px 0;"><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+            </div>
+            <p style="color: #666; font-size: 12px;">This is an automated notification from your travel blog.</p>
+          </div>
+        `,
+      });
+    }
+
+    // Optionally send welcome email to subscriber
+    await emailService.sendEmail({
+      to: normalizedEmail,
+      subject: "Welcome to What the Ellie!",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h1 style="color: #333;">Welcome to What the Ellie!</h1>
+          <p>Thank you for subscribing to our travel blog newsletter!</p>
+          <p>You'll be the first to know when new travel stories and guides are published.</p>
+          <div style="margin: 30px 0;">
+            <p>In the meantime, check out our latest content:</p>
+            <ul>
+              <li><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://whattheellie.com'}/map">Interactive Travel Map</a></li>
+              <li><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://whattheellie.com'}/spain">Spain Travel Guide</a></li>
+              <li><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://whattheellie.com'}">Latest Blog Posts</a></li>
+            </ul>
+          </div>
+          <p style="color: #666; font-size: 12px;">If you didn't subscribe to this newsletter, you can safely ignore this email.</p>
+        </div>
+      `,
+    });
 
     return NextResponse.json(
       { 
-        message: "Successfully subscribed! You'll be notified when new content is published.",
+        message: "Successfully subscribed! Check your email for a welcome message.",
         id: newSubscriber.id 
       },
       { status: 201 }
@@ -116,10 +124,16 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const subscribers = await getSubscribers();
-    const subscriber = subscribers.find((sub) => sub.token === token);
+    // Find subscriber by token
+    let foundSubscriber: Subscriber | undefined;
+    for (const [_, subscriber] of subscribers) {
+      if (subscriber.token === token) {
+        foundSubscriber = subscriber;
+        break;
+      }
+    }
 
-    if (!subscriber) {
+    if (!foundSubscriber) {
       return NextResponse.json(
         { error: "Invalid token" },
         { status: 404 }
@@ -127,15 +141,15 @@ export async function GET(request: NextRequest) {
     }
 
     // Mark as verified
-    if (!subscriber.verified) {
-      subscriber.verified = true;
-      await saveSubscribers(subscribers);
+    if (!foundSubscriber.verified) {
+      foundSubscriber.verified = true;
+      subscribers.set(foundSubscriber.email, foundSubscriber);
     }
 
     return NextResponse.json(
       { 
         message: "Email verified successfully",
-        email: subscriber.email 
+        email: foundSubscriber.email 
       },
       { status: 200 }
     );
@@ -162,21 +176,30 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const subscribers = await getSubscribers();
-    const filteredSubscribers = subscribers.filter((sub) => {
-      if (token) return sub.token !== token;
-      if (email) return sub.email.toLowerCase() !== email.toLowerCase();
-      return true;
-    });
+    let deleted = false;
+    
+    if (email) {
+      const normalizedEmail = email.toLowerCase();
+      if (subscribers.has(normalizedEmail)) {
+        subscribers.delete(normalizedEmail);
+        deleted = true;
+      }
+    } else if (token) {
+      for (const [email, subscriber] of subscribers) {
+        if (subscriber.token === token) {
+          subscribers.delete(email);
+          deleted = true;
+          break;
+        }
+      }
+    }
 
-    if (filteredSubscribers.length === subscribers.length) {
+    if (!deleted) {
       return NextResponse.json(
         { error: "Subscriber not found" },
         { status: 404 }
       );
     }
-
-    await saveSubscribers(filteredSubscribers);
 
     return NextResponse.json(
       { message: "Successfully unsubscribed" },

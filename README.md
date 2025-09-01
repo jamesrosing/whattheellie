@@ -29,6 +29,14 @@ An immersive travel blog featuring an interactive map, comprehensive Spain guide
 - **Interactive cards** with expandable details
 - **Insider tips** and local secrets throughout
 
+### Newsletter Subscription
+- **Email subscription system** available in header, mobile menu, and footer
+- **Welcome emails** automatically sent to new subscribers
+- **Admin notifications** for new subscriptions
+- **Email service integration** supporting Gmail and Resend
+- **Form validation** with real-time feedback
+- **Mobile-optimized** subscription forms
+
 ### Original Blog Features
 This travel blog extends the original [Next.js blog template](https://github.com/Wisp-CMS/nextjs-blog-cms-wisp) with travel-specific enhancements while maintaining all core blogging features.
 
@@ -53,6 +61,7 @@ Wisp is a modern CMS for adding blogs to websites. It features an intuitive, med
 - **Spain Guide**: Comprehensive travel guide with history, culture, and destinations
 - **Location-based content**: Connect blog posts to map locations
 - **Travel statistics**: Track countries, cities, and miles traveled
+- **Newsletter System**: Email subscriptions with automated welcome emails
 - **Animated interfaces**: Smooth transitions with Framer Motion
 - **Mobile-optimized**: Touch-friendly map controls and responsive design
 
@@ -68,6 +77,8 @@ Wisp is a modern CMS for adding blogs to websites. It features an intuitive, med
 ### Travel Features Stack
 - [Leaflet](https://leafletjs.com/) for interactive maps
 - [Framer Motion](https://www.framer.com/motion/) for animations
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) for form validation
+- [Nodemailer](https://nodemailer.com/) for email notifications
 - Custom watercolor map tiles from Stamen Design
 - Responsive design with mobile-first approach
 
@@ -95,6 +106,30 @@ Then, copy the `.env.example` file to `.env`:
 
 ```bash
 cp .env.example .env
+```
+
+Configure your environment variables:
+
+```bash
+# Required
+NEXT_PUBLIC_BLOG_ID=<your-wisp-blog-id>
+NEXT_PUBLIC_BLOG_DISPLAY_NAME=<blog-name>
+NEXT_PUBLIC_BLOG_COPYRIGHT=<copyright-name>
+NEXT_PUBLIC_BASE_URL=<your-domain>
+OG_IMAGE_SECRET=<random-secret>
+
+# Optional - Email Service (choose one)
+# Gmail
+GMAIL_USER=<your-gmail>
+GMAIL_APP_PASSWORD=<app-password>
+GMAIL_FROM_NAME=<sender-name>
+
+# OR Resend
+RESEND_API_KEY=<resend-api-key>
+RESEND_FROM_EMAIL=<from-email>
+
+# Admin notifications
+ADMIN_EMAIL=<admin-email>
 ```
 
 Note: You will need to populate the `NEXT_PUBLIC_BLOG_ID` variable with the Blog ID obtained from wisp after you've created an account.
@@ -132,6 +167,16 @@ The Spain guide content is in `src/app/spain/page.tsx`. The page is organized in
 - Add your own favorite destinations
 - Customize cuisine recommendations
 - Include personal travel tips and experiences
+
+### Newsletter Configuration
+The newsletter system uses email services for notifications:
+
+1. **Gmail Setup**: Enable 2-factor authentication and create an app-specific password
+2. **Resend Setup**: Sign up at [Resend](https://resend.com) and get your API key
+3. **Production Database**: Replace in-memory storage in `/api/subscribe` with a database:
+   - Vercel KV for simple key-value storage
+   - Supabase/PostgreSQL for full database features
+   - MongoDB Atlas for document storage
 
 ## Deployment
 

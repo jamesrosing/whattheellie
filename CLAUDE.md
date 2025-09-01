@@ -70,6 +70,14 @@ npm run lint
 - Expandable cards with Framer Motion animations
 - Lonely Planet style content organization
 
+**Newsletter System** (`src/components/NewsletterSubscribe.tsx`)
+- Email subscription component with inline and card variants
+- Available in header (desktop popover), mobile menu, and footer
+- Form validation with react-hook-form and Zod
+- Success/error state management with animations
+- Integrated email service (`src/lib/email.ts`) supporting Gmail and Resend
+- API endpoint at `/api/subscribe` with in-memory storage (production needs database)
+
 ### Environment Variables
 
 Required in `.env`:
@@ -79,6 +87,16 @@ NEXT_PUBLIC_BLOG_DISPLAY_NAME=<name>
 NEXT_PUBLIC_BLOG_COPYRIGHT=<copyright>
 NEXT_PUBLIC_BASE_URL=<base-url>
 OG_IMAGE_SECRET=<signing-secret>
+
+# Email Configuration (Optional - for newsletter)
+GMAIL_USER=<gmail-address>           # Gmail address for sending emails
+GMAIL_APP_PASSWORD=<app-password>    # Gmail app-specific password
+GMAIL_FROM_NAME=<sender-name>        # Display name for emails
+# OR
+RESEND_API_KEY=<resend-api-key>      # Resend API key
+RESEND_FROM_EMAIL=<from-email>       # Resend from email
+# Admin notification email
+ADMIN_EMAIL=<admin-email>            # Email to receive subscription notifications
 ```
 
 ### Critical Implementation Details
