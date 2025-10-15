@@ -227,8 +227,8 @@ export const BlogPostsPreview: FunctionComponent<{
 
 ### Tasks
 
-- [ ] T013 Run TypeScript build check (`npm run build`) and fix any type errors
-- [ ] T014 Verify dark mode colors render correctly (bg-gray-200 dark:bg-zinc-800)
+- [x] T013 Run TypeScript build check (`npm run build`) and fix any type errors
+- [x] T014 Verify dark mode colors render correctly (bg-gray-200 dark:bg-zinc-800)
 
 **Completion Criteria**:
 - [ ] `npm run build` succeeds with zero errors
