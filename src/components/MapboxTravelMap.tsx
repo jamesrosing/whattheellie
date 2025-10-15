@@ -118,7 +118,7 @@ export default function MapboxTravelMap({ view = 'journey' }: MapboxTravelMapPro
           container: mapContainer.current,
           style: `mapbox://styles/mapbox/${currentStyle}`, // Use correct style format
           center: [-3.7038, 40.4168], // Madrid
-          zoom: view === 'home' ? 8 : 4,
+          zoom: view === 'home' ? 8 : 6,
           pitch: 0, // Start flat for better initial load
           bearing: 0,
           antialias: true,
