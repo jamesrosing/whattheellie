@@ -18,40 +18,41 @@ interface PageProps {
   }>;
 }
 
-const POSTS_PER_PAGE = 6;
+// Load all posts for infinite scroll effect (100 posts max per page)
+const POSTS_PER_PAGE = 100;
 
-function parsePageNumber(page: string | string[] | undefined): number {
-  if (!page) return 1;
-  const pageStr = Array.isArray(page) ? page[0] : page;
-  const parsed = parseInt(pageStr, 10);
-  return isNaN(parsed) || parsed < 1 ? 1 : parsed;
-}
-
-const Page = async ({ searchParams }: PageProps) => {
-  const params = await searchParams;
-  const page = parsePageNumber(params.page);
-  
+const Page = async () => {
   try {
-    const result = await wisp.getPosts({ limit: POSTS_PER_PAGE, page });
+    const result = await wisp.getPosts({ limit: POSTS_PER_PAGE, page: 1 });
     
     return (
-      <div className="container mx-auto px-5 mb-10">
-        <Header />
+      <>
+        <div className="container mx-auto px-5">
+          <Header />
+        </div>
         <BlogPostsPreview posts={result.posts} />
-        <Footer />
-      </div>
+        <div className="container mx-auto px-5 mb-10">
+          <Footer />
+        </div>
+      </>
     );
   } catch (error) {
     console.error("Error fetching posts:", error);
     return (
-      <div className="container mx-auto px-5 mb-10">
-        <Header />
-        <div className="text-center py-10">
-          <h2 className="text-2xl font-display font-medium">Unable to load posts</h2>
-          <p className="text-muted-foreground mt-2">Please try again later.</p>
+      <>
+        <div className="container mx-auto px-5">
+          <Header />
         </div>
-        <Footer />
-      </div>
+        <div className="container mx-auto px-5">
+          <div className="text-center py-10">
+            <h2 className="text-2xl font-display font-medium">Unable to load posts</h2>
+            <p className="text-muted-foreground mt-2">Please try again later.</p>
+          </div>
+        </div>
+        <div className="container mx-auto px-5 mb-10">
+          <Footer />
+        </div>
+      </>
     );
   }
 };

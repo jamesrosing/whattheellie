@@ -6,7 +6,11 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(wget:*)",
-      "WebFetch(domain:docs.mapbox.com)"
+      "WebFetch(domain:docs.mapbox.com)",
+      "Bash(/mnt/d/projects/whattheellie/.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks)",
+      "Bash(pwsh:*)",
+      "Bash(test:*)",
+      "SlashCommand(/speckit.plan)"
     ],
     "deny": [],
     "ask": []
