@@ -29,9 +29,9 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { name: "Blog", href: "/" },
-  { name: "Travel Map", href: "/map" },
-  { name: "Spain Guide", href: "/spain" },
+  { name: "Bujo", href: "/" },
+  { name: "On The Map", href: "/map" },
+  { name: "Spain", href: "/spain" },
 ];
 
 export const Navigation: FunctionComponent = () => {
@@ -47,10 +47,10 @@ export const Navigation: FunctionComponent = () => {
             key={item.href}
             href={item.href}
             className={cn(
-              "nav-text px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+              "font-garamond px-4 py-2 rounded-lg text-sm font-light uppercase tracking-wide transition-all duration-200",
               "hover:bg-accent hover:text-accent-foreground hover:scale-105",
-              pathname === item.href 
-                ? "bg-accent/50 text-accent-foreground font-semibold" 
+              pathname === item.href
+                ? "bg-accent/50 text-accent-foreground"
                 : "text-muted-foreground"
             )}
           >
@@ -120,19 +120,19 @@ export const Navigation: FunctionComponent = () => {
             <nav className="flex flex-col space-y-2 mt-8">
               {menuItems.map((item, index) => {
                 const isActive = pathname === item.href;
-                
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "nav-text flex items-center justify-center px-4 py-3 rounded-xl",
-                      "text-lg font-medium transition-all duration-300",
+                      "font-garamond flex items-center justify-center px-4 py-3 rounded-xl",
+                      "text-lg font-light uppercase tracking-wide transition-all duration-300",
                       "hover:bg-accent hover:shadow-md",
                       "animate-fade-in-up",
-                      isActive 
-                        ? "bg-accent/50 text-accent-foreground font-bold" 
+                      isActive
+                        ? "bg-accent/50 text-accent-foreground"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                     style={{
