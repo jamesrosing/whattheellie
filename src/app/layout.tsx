@@ -2,13 +2,10 @@ import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import "./fonts.css";
 import { Providers } from "./providers";
-
-const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: {
@@ -40,10 +37,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/1bp8vud.css" />
       </head>
       <body
-        className={cn(
-          "min-h-screen bg-background font-cerebri antialiased max-w-6xl m-auto",
-          fontSans.variable
-        )}
+        className="min-h-screen bg-background font-cerebri antialiased max-w-6xl m-auto"
       >
         <Providers>
           <main>{children}</main>

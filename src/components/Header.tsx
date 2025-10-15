@@ -10,7 +10,7 @@ import { DarkModeToggle } from "@/components/DarkModeToggle";
 import { NewsletterSubscribe } from "@/components/NewsletterSubscribe";
 import { config } from "@/config";
 import { cn } from "@/lib/utils";
-import { Menu, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FunctionComponent, useState } from "react";
@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 interface MenuItem {
   name: string;
@@ -80,14 +81,32 @@ export const Navigation: FunctionComponent = () => {
 
       {/* Mobile Navigation */}
       <div className="md:hidden flex items-center space-x-2">
-        <DarkModeToggle />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
-            <button 
-              className="p-2 rounded-lg hover:bg-accent transition-colors duration-200"
+            <button
+              className="p-2 group"
               aria-label="Open menu"
             >
-              <Menu className="h-6 w-6 animate-fade-in" />
+              <div className="w-6 h-5 flex flex-col justify-between items-end">
+                <motion.span
+                  className="h-[1.5px] bg-foreground rounded-full transition-all duration-300 group-hover:bg-primary"
+                  initial={{ width: '100%' }}
+                  animate={{ width: isOpen ? '0%' : '100%' }}
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.span
+                  className="h-[1.5px] bg-foreground rounded-full transition-all duration-300 group-hover:bg-primary"
+                  style={{ width: '75%' }}
+                  animate={{ width: isOpen ? '0%' : '75%' }}
+                  transition={{ duration: 0.3, delay: 0.05 }}
+                />
+                <motion.span
+                  className="h-[1.5px] bg-foreground rounded-full transition-all duration-300 group-hover:bg-primary"
+                  style={{ width: '50%' }}
+                  animate={{ width: isOpen ? '0%' : '50%' }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                />
+              </div>
             </button>
           </SheetTrigger>
           <SheetContent 
@@ -141,13 +160,20 @@ export const Navigation: FunctionComponent = () => {
               </div>
             </div>
 
+            {/* Theme Toggle Section */}
+            <div className="mt-4 px-2">
+              <div className="border rounded-xl p-4 bg-accent/10 flex items-center justify-between">
+                <span className="font-medium text-sm">Theme</span>
+                <DarkModeToggle />
+              </div>
+            </div>
+
             {/* Mobile Menu Footer */}
             <div className="absolute bottom-8 left-0 right-0 px-6">
               <div className="flex items-center justify-between pt-6 border-t">
                 <span className="text-sm text-muted-foreground">
                   © {new Date().getFullYear()} {config.blog.copyright}
                 </span>
-                <DarkModeToggle />
               </div>
             </div>
           </SheetContent>
@@ -159,16 +185,52 @@ export const Navigation: FunctionComponent = () => {
 
 export const Header: FunctionComponent = () => {
   return (
-    <header className="flex items-center justify-between mt-8 md:mt-16 mb-12 animate-fade-in">
-      <Link 
+    <header className="relative flex items-center justify-between mt-4 md:mt-16 mb-4 md:mb-12 animate-fade-in">
+      {/* Subtle gradient background */}
+      <div className="absolute inset-0 -mx-5 opacity-40 bg-gradient-to-r from-transparent via-accent/30 to-transparent blur-xl pointer-events-none" />
+
+      {/* Mobile: Hamburger on left, title centered */}
+      <div className="md:hidden w-full flex items-center justify-between relative z-10">
+        <div className="flex-shrink-0">
+          <Navigation />
+        </div>
+        <Link
+          href="/"
+          className="group absolute left-1/2 transform -translate-x-1/2"
+        >
+          <motion.h1
+            className="hero-text transition-all duration-300 hover:scale-105 hover:text-primary"
+            style={{ letterSpacing: '0.3em' }}
+            initial={{ opacity: 0, letterSpacing: '0.5em', scale: 0.95 }}
+            animate={{ opacity: 1, letterSpacing: '0.3em', scale: 1 }}
+            transition={{
+              duration: 1.2,
+              ease: [0.23, 1, 0.32, 1],
+              letterSpacing: { duration: 1.5 }
+            }}
+          >
+            {config.blog.name}
+          </motion.h1>
+        </Link>
+      </div>
+
+      {/* Desktop: Title on left, nav on right */}
+      <Link
         href="/"
-        className="group"
+        className="group hidden md:block relative z-10"
       >
-        <h1 className="hero-text transition-all duration-300 hover:scale-105 hover:text-primary">
+        <motion.h1
+          className="hero-text transition-all duration-300 hover:scale-105 hover:text-primary"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+        >
           {config.blog.name}
-        </h1>
+        </motion.h1>
       </Link>
-      <Navigation />
+      <div className="hidden md:block relative z-10">
+        <Navigation />
+      </div>
     </header>
   );
 };

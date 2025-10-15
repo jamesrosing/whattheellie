@@ -46,7 +46,7 @@ export const BlogPostsPreview: FunctionComponent<{
   return (
     <div
       className={cn(
-        "grid grid-cols-3 md:grid-cols-4 gap-0 md:gap-4 md:my-16 md:container md:mx-auto",
+        "grid grid-cols-3 md:grid-cols-4 gap-px md:gap-4 px-px md:px-0 md:my-16 md:container md:mx-auto",
         className
       )}
     >
