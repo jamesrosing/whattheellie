@@ -23,19 +23,28 @@ export const BlogPostPreview: FunctionComponent<{
         animationFillMode: "backwards"
       }}
     >
-      <div className="group relative aspect-square bg-gray-200 dark:bg-zinc-800 overflow-hidden cursor-pointer">
+      <div className="group relative aspect-square bg-gray-200 dark:bg-zinc-800 overflow-hidden cursor-pointer active:scale-[1.02] transition-transform duration-150">
         <Image
           alt={post.title}
-          className="object-cover transition-all duration-500 blur-[2px] group-hover:blur-none group-hover:scale-110"
+          className="object-cover transition-all duration-500
+                     blur-none md:blur-[2px] md:group-hover:blur-none
+                     md:group-hover:scale-110"
           src={imageSrc}
           fill
           onError={() => setImageError(true)}
         />
-        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-all duration-300" />
-        {/* Lower third gradient for title visibility on hover */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <div className="absolute inset-0 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-          <h2 className="font-garamond text-lg md:text-xl font-[300] tracking-normal text-white text-center px-4 line-clamp-2 uppercase">
+        <div className="absolute inset-0
+                        bg-black/0 md:bg-black/40 md:group-hover:bg-black/0
+                        transition-all duration-300" />
+        {/* Lower third gradient for title visibility - always visible on mobile, hover on desktop */}
+        <div className="absolute inset-x-0 bottom-0 h-1/3
+                        bg-gradient-to-t from-black/70 via-black/30 to-transparent
+                        opacity-100 md:opacity-0 md:group-hover:opacity-100
+                        transition-opacity duration-300" />
+        <div className="absolute inset-0 flex items-end justify-center pb-4
+                        opacity-100 md:opacity-0 md:group-hover:opacity-100
+                        transition-opacity duration-300 z-10">
+          <h2 className="font-garamond text-sm md:text-lg lg:text-xl font-[300] tracking-normal text-white text-center px-4 line-clamp-2 uppercase">
             {post.title}
           </h2>
         </div>
