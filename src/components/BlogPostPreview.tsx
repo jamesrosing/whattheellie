@@ -3,12 +3,17 @@ import { cn } from "@/lib/utils";
 import { GetPostsResult } from "@/lib/wisp";
 import Image from "next/image";
 import Link from "next/link";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 
 export const BlogPostPreview: FunctionComponent<{
   post: GetPostsResult["posts"][0];
   index?: number;
 }> = ({ post, index = 0 }) => {
+  const [imageError, setImageError] = useState(false);
+  const imageSrc = imageError
+    ? "/images/placeholder.webp"
+    : (post.image || "/images/placeholder.webp");
+
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -22,8 +27,9 @@ export const BlogPostPreview: FunctionComponent<{
         <Image
           alt={post.title}
           className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:blur-sm"
-          src={post.image || "/images/placeholder.webp"}
+          src={imageSrc}
           fill
+          onError={() => setImageError(true)}
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300" />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">

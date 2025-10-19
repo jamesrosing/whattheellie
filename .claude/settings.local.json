@@ -10,7 +10,8 @@
       "Bash(/mnt/d/projects/whattheellie/.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks)",
       "Bash(pwsh:*)",
       "Bash(test:*)",
-      "SlashCommand(/speckit.plan)"
+      "SlashCommand(/speckit.plan)",
+      "Bash(cat /mnt/d/projects/whattheellie/.env.example)"
     ],
     "deny": [],
     "ask": []
