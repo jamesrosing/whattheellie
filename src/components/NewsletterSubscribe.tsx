@@ -20,9 +20,10 @@ type FormData = z.infer<typeof formSchema>;
 interface NewsletterSubscribeProps {
   variant?: "inline" | "card";
   className?: string;
+  stacked?: boolean;
 }
 
-export function NewsletterSubscribe({ variant = "inline", className }: NewsletterSubscribeProps) {
+export function NewsletterSubscribe({ variant = "inline", className, stacked = false }: NewsletterSubscribeProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -73,12 +74,12 @@ export function NewsletterSubscribe({ variant = "inline", className }: Newslette
       <div className={cn("w-full", className)}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <div className="flex gap-2">
+            <div className={cn(stacked ? "flex flex-col gap-2" : "flex gap-2")}>
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0">
+                  <FormItem className={cn(stacked ? "w-full space-y-0" : "flex-1 space-y-0")}>
                     <FormControl>
                       <Input
                         type="email"
@@ -91,11 +92,11 @@ export function NewsletterSubscribe({ variant = "inline", className }: Newslette
                   </FormItem>
                 )}
               />
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={status === "loading"}
                 size="sm"
-                className="h-10"
+                className={cn("h-10", stacked && "w-full")}
               >
                 {status === "loading" ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
