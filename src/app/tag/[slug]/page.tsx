@@ -7,6 +7,9 @@ import { wisp } from "@/lib/wisp";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 
+// Revalidate every 5 minutes to show new posts with this tag
+export const revalidate = 300;
+
 interface Params {
   slug: string;
 }

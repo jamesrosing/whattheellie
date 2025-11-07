@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   description: config.blog.metadata.description,
 };
 
+// Revalidate every 5 minutes to ensure new posts appear
+// This provides a balance between performance and freshness
+export const revalidate = 300;
+
 interface PageProps {
   searchParams: Promise<{ 
     page?: string | string[];

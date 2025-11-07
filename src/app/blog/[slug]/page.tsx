@@ -10,6 +10,9 @@ import { wisp } from "@/lib/wisp";
 import { notFound } from "next/navigation";
 import type { BlogPosting, WithContext } from "schema-dts";
 
+// Revalidate every 5 minutes for updated post content and new comments
+export const revalidate = 300;
+
 export async function generateMetadata(props: { params: Promise<Params> }) {
   const params = await props.params;
   const { slug } = params;

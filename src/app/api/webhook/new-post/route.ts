@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { promises as fs } from "fs";
 import path from "path";
 import { wisp } from "@/lib/wisp";
@@ -181,10 +182,19 @@ export async function POST(request: NextRequest) {
 
     await Promise.allSettled(notifications);
 
+    // Revalidate homepage and tag pages to show new post immediately
+    revalidatePath('/', 'page');
+
+    // Also revalidate tag pages if the post has tags
+    // This ensures tag pages show the new post too
+    revalidatePath('/tag/[slug]', 'page');
+
+    console.log(`✅ Revalidated homepage and tag pages for new post: ${title}`);
+
     return NextResponse.json(
-      { 
-        message: "Notifications sent",
-        count: verifiedSubscribers.length 
+      {
+        message: "Notifications sent and cache revalidated",
+        count: verifiedSubscribers.length
       },
       { status: 200 }
     );
